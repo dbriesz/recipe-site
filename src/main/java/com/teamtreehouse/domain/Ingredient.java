@@ -13,5 +13,6 @@ public class Ingredient {
 
     private String name;
     private String measurement;
+    private int quantity;
 
 }
