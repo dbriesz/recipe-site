@@ -1,4 +1,4 @@
 package com.teamtreehouse.dao;
 
-public interface FavoriteDao {
+public interface CategoryDao {
 }

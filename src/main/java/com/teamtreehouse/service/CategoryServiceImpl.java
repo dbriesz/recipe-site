@@ -1,4 +1,4 @@
 package com.teamtreehouse.service;
 
-public interface FavoriteService {
+public class CategoryServiceImpl {
 }
