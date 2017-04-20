@@ -11,6 +11,7 @@ public class Recipe {
     private Long id;
     private String name;
     private String description;
+    @ManyToOne
     private Category category;
     private String imageUrl;
     @OneToMany
