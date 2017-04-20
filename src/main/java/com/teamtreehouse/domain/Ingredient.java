@@ -13,6 +13,9 @@ public class Ingredient {
     @ManyToOne
     private Recipe recipe;
 
+    public Ingredient() {
+    }
+
     public Ingredient(String name, String measurement, int quantity) {
         this.name = name;
         this.measurement = measurement;

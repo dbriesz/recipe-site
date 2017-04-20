@@ -24,6 +24,9 @@ public class Recipe {
     @ManyToOne
     private User user;
 
+    public Recipe() {
+    }
+
     public Recipe(String name, String description, Category category,
                   String imageUrl, List<Ingredient> ingredients, List<Instruction> instructions,
                   String prepTime, String cookTime, boolean favorite) {

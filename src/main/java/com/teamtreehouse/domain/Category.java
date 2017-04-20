@@ -13,6 +13,9 @@ public class Category {
     @OneToMany
     private List<Recipe> recipes = new ArrayList<>();
 
+    public Category() {
+    }
+
     public Category(String name) {
         this.name = name;
     }

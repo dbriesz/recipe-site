@@ -14,6 +14,9 @@ public class User {
     @OneToMany
     private List<Recipe> favorites = new ArrayList<>();
 
+    public User() {
+    }
+
     public User(String username, String password) {
         this.username = username;
         this.password = password;

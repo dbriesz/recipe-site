@@ -12,6 +12,9 @@ public class Instruction {
     @ManyToOne
     private Recipe recipe;
 
+    public Instruction() {
+    }
+
     public Instruction(String description, String cookingInstruction) {
         this.description = description;
         this.cookingInstruction = cookingInstruction;
