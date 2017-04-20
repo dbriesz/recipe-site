@@ -1,9 +1,6 @@
 package com.teamtreehouse.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +11,7 @@ public class User {
     private Long id;
     private String username;
     private String password;
+    @OneToMany
     private List<Recipe> favorites = new ArrayList<>();
 
     public User(String username, String password) {

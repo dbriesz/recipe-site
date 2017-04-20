@@ -20,6 +20,8 @@ public class Recipe {
     private String prepTime;
     private String cookTime;
     private boolean favorite;
+    @ManyToOne
+    private User user;
 
     public Recipe(String name, String description, Category category,
                   String imageUrl, List<Ingredient> ingredients, List<Instruction> instructions,
@@ -115,6 +117,14 @@ public class Recipe {
         this.favorite = favorite;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -132,7 +142,8 @@ public class Recipe {
         if (instructions != null ? !instructions.equals(recipe.instructions) : recipe.instructions != null)
             return false;
         if (prepTime != null ? !prepTime.equals(recipe.prepTime) : recipe.prepTime != null) return false;
-        return cookTime != null ? cookTime.equals(recipe.cookTime) : recipe.cookTime == null;
+        if (cookTime != null ? !cookTime.equals(recipe.cookTime) : recipe.cookTime != null) return false;
+        return user != null ? user.equals(recipe.user) : recipe.user == null;
     }
 
     @Override
@@ -147,6 +158,7 @@ public class Recipe {
         result = 31 * result + (prepTime != null ? prepTime.hashCode() : 0);
         result = 31 * result + (cookTime != null ? cookTime.hashCode() : 0);
         result = 31 * result + (favorite ? 1 : 0);
+        result = 31 * result + (user != null ? user.hashCode() : 0);
         return result;
     }
 }

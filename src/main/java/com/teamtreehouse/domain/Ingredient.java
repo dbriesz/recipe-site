@@ -1,9 +1,6 @@
 package com.teamtreehouse.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Ingredient {
@@ -13,6 +10,8 @@ public class Ingredient {
     private String name;
     private String measurement;
     private int quantity;
+    @ManyToOne
+    private Recipe recipe;
 
     public Ingredient(String name, String measurement, int quantity) {
         this.name = name;
@@ -52,6 +51,14 @@ public class Ingredient {
         this.quantity = quantity;
     }
 
+    public Recipe getRecipe() {
+        return recipe;
+    }
+
+    public void setRecipe(Recipe recipe) {
+        this.recipe = recipe;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,7 +69,8 @@ public class Ingredient {
         if (quantity != that.quantity) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return measurement != null ? measurement.equals(that.measurement) : that.measurement == null;
+        if (measurement != null ? !measurement.equals(that.measurement) : that.measurement != null) return false;
+        return recipe != null ? recipe.equals(that.recipe) : that.recipe == null;
     }
 
     @Override
@@ -71,6 +79,7 @@ public class Ingredient {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (measurement != null ? measurement.hashCode() : 0);
         result = 31 * result + quantity;
+        result = 31 * result + (recipe != null ? recipe.hashCode() : 0);
         return result;
     }
 }
