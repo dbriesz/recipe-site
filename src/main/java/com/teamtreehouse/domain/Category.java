@@ -21,6 +21,7 @@ public class Category {
     }
 
     public void addRecipe(Recipe recipe) {
+        recipe.setCategory(this);
         recipes.add(recipe);
     }
 

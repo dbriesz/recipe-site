@@ -21,12 +21,10 @@ dependencies {
     compile 'org.hibernate:hibernate-core:5.1.0.Final'
     compile 'org.apache.tomcat:tomcat-dbcp:8.0.32'
     compile 'com.h2database:h2'
-/*
-    compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'org.springframework.boot:spring-boot-starter-data-rest'
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.data:spring-data-rest-hal-browser'
-*/
+//    compile 'org.springframework.boot:spring-boot-starter-security'
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.apache.httpcomponents:httpclient:4.5.2'

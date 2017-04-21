@@ -1,4 +1,7 @@
 package com.teamtreehouse.dao;
 
-public interface InstructionDao {
+import com.teamtreehouse.domain.Instruction;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+public interface InstructionDao extends PagingAndSortingRepository<Instruction, Long> {
 }

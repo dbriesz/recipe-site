@@ -23,6 +23,7 @@ public class User {
     }
 
     public void addFavorite(Recipe recipe) {
+        recipe.setUser(this);
         favorites.add(recipe);
     }
 

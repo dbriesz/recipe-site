@@ -1,4 +1,7 @@
 package com.teamtreehouse.dao;
 
-public interface CategoryDao {
+import com.teamtreehouse.domain.Category;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+public interface CategoryDao extends PagingAndSortingRepository<Category, Long> {
 }

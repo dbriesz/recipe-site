@@ -42,10 +42,12 @@ public class Recipe {
     }
 
     public void addIngredient(Ingredient ingredient) {
+        ingredient.setRecipe(this);
         ingredients.add(ingredient);
     }
 
     public void addInstruction(Instruction instruction) {
+        instruction.setRecipe(this);
         instructions.add(instruction);
     }
 

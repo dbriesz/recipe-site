@@ -1,4 +1,7 @@
 package com.teamtreehouse.dao;
 
-public interface IngredientDao {
+import com.teamtreehouse.domain.Ingredient;
+import org.springframework.data.repository.PagingAndSortingRepository;
+
+public interface IngredientDao extends PagingAndSortingRepository<Ingredient, Long> {
 }
