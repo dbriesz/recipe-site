@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,9 +47,13 @@ public class RecipeControllerTest {
     private MockMvc mockMvc;
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
+        InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
+        viewResolver.setPrefix("classpath:/templates/");
+        viewResolver.setSuffix(".html");
+        mockMvc = MockMvcBuilders.standaloneSetup(recipeController)
+                .setViewResolvers(viewResolver).build();
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(recipeController).build();
     }
 
     @Test
@@ -108,13 +113,13 @@ public class RecipeControllerTest {
         when(recipeService.findById(1L)).thenReturn(recipe);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/edit"))
-                .andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/recipes/1"));
     }
 
     private Recipe recipeBuilder() {
         Recipe recipe = new Recipe();
+        recipe.setId(1L);
         recipe.setName("TestName");
         recipe.setDescription("TestDesc");
         recipe.setCategory(new Category("TestCategory"));
