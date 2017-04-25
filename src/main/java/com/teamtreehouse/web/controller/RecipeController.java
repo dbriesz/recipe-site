@@ -67,6 +67,8 @@ public class RecipeController {
     @RequestMapping(value = "/recipes/{recipeId}/edit", method = RequestMethod.POST)
     public String updateRecipe(@Valid Recipe recipe) {
         // Update recipe if valid data was received
+        Recipe originalRecipe = recipeService.findById(recipe.getId());
+
         recipeService.save(recipe);
 
         // Redirect browser to recipe detail page

@@ -11,13 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -27,7 +21,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -35,9 +28,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 public class RecipeControllerTest {
 
     final String BASE_URL = "http://localhost:8080";
-
-    @Mock
-    private MockHttpSession session;
 
     @Mock
     private RecipeService recipeService;
@@ -111,10 +101,10 @@ public class RecipeControllerTest {
         Recipe recipe = recipeBuilder();
 
         when(recipeService.findById(1L)).thenReturn(recipe);
+        recipe.setName("TestName2");
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/edit"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/recipes/1"));
+                .andExpect(status().is3xxRedirection());
     }
 
     private Recipe recipeBuilder() {
