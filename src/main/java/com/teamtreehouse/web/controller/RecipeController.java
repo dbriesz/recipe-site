@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -61,4 +63,13 @@ public class RecipeController {
         return "edit";
     }
 
+    // Update an existing recipe
+    @RequestMapping(value = "/recipes/{recipeId}/edit", method = RequestMethod.POST)
+    public String updateRecipe(@Valid Recipe recipe) {
+        // Update recipe if valid data was received
+        recipeService.save(recipe);
+
+        // Redirect browser to recipe detail page
+        return String.format("redirect:/recipes/%s", recipe.getId());
+    }
 }

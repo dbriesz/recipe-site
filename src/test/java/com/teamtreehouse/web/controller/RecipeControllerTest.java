@@ -90,7 +90,28 @@ public class RecipeControllerTest {
             .andExpect(view().name("/"));
     }
 
+    @Test
+    public void editRecipeTest() throws Exception {
+        Recipe recipe = recipeBuilder();
 
+        when(recipeService.findById(1L)).thenReturn(recipe);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipes/1/edit"))
+            .andExpect(status().isOk())
+            .andExpect(view().name("edit"));
+    }
+
+    @Test
+    public void updateRecipeTest() throws Exception {
+        Recipe recipe = recipeBuilder();
+
+        when(recipeService.findById(1L)).thenReturn(recipe);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/edit"))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/recipes/1"));
+    }
 
     private Recipe recipeBuilder() {
         Recipe recipe = new Recipe();
