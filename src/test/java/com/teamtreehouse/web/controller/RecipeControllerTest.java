@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class RecipeControllerTest {
@@ -74,15 +73,21 @@ public class RecipeControllerTest {
     }
 
     @Test
+    public void formNewRecipeTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/recipes/add"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("/"));
+    }
+
+    @Test
     public void addNewRecipeTest() throws Exception {
         Recipe recipe = recipeBuilder();
 
         when(recipeService.findById(1L)).thenReturn(recipe);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/add"))
-            .andDo(print())
-            .andExpect(status().isOk())
-            .andExpect(view().name("/"));
+            .andExpect(status().is3xxRedirection())
+            .andExpect(redirectedUrl("/"));
     }
 
     @Test
@@ -105,6 +110,17 @@ public class RecipeControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/edit"))
                 .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    public void deleteRecipeTest() throws Exception {
+        Recipe recipe = recipeBuilder();
+
+        when(recipeService.findById(1L)).thenReturn(recipe);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/delete"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/"));
     }
 
     private Recipe recipeBuilder() {
