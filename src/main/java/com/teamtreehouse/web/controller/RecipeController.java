@@ -39,7 +39,7 @@ public class RecipeController {
         return "detail";
     }
 
-    // Form for adding a new recipe
+/*    // Form for adding a new recipe
     @RequestMapping("recipes/add")
     public String formNewRecipe(Model model) {
         // Add model attributes needed for new form
@@ -48,8 +48,8 @@ public class RecipeController {
         }
         model.addAttribute("action", "/recipes/add");
 
-        return "/";
-    }
+        return "";
+    }*/
 
     // Edit an existing recipe
     @RequestMapping("recipes/{recipeId}/edit")
@@ -64,20 +64,8 @@ public class RecipeController {
         return "edit";
     }
 
-    // Update an existing recipe
-    @RequestMapping(value = "/recipes/{recipeId}/edit", method = RequestMethod.POST)
-    public String updateRecipe(@Valid Recipe recipe) {
-        // Update recipe if valid data was received
-        Recipe originalRecipe = recipeService.findById(recipe.getId());
-
-        recipeService.save(recipe);
-
-        // Redirect browser to recipe detail page
-        return String.format("redirect:/recipes/%s", recipe.getId());
-    }
-
     // Add a recipe
-    @RequestMapping(value = "/recipes/add", method = RequestMethod.POST)
+    @RequestMapping(value = "recipes/add", method = RequestMethod.POST)
     public String addRecipe(@Valid Recipe recipe, BindingResult result) {
         // Add recipe if valid data was received
         if (result.hasErrors()) {
@@ -90,8 +78,20 @@ public class RecipeController {
         return "redirect:/";
     }
 
+    // Update an existing recipe
+    @RequestMapping(value = "recipes/{recipeId}/edit", method = RequestMethod.POST)
+    public String updateRecipe(@Valid Recipe recipe) {
+        // Update recipe if valid data was received
+        Recipe originalRecipe = recipeService.findById(recipe.getId());
+
+        recipeService.save(recipe);
+
+        // Redirect browser to recipe detail page
+        return String.format("redirect:/recipes/%s", recipe.getId());
+    }
+
     // Delete an existing recipe
-    @RequestMapping(value = "/recipes/{recipeId}/delete", method = RequestMethod.POST)
+    @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
     public String deleteProject(@PathVariable Long recipeId) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
