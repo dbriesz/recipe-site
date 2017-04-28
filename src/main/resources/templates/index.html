@@ -44,8 +44,11 @@
           <a href="detail.html">
             <div class="grid-70">
               <p th:href="@{|/recipes/${recipe.id}/|}" th:text="${recipe.name}">
-                <span><img src="images/favorite.svg" height="12px"/> </span>
-                Baked Alaskan Salmon with Asparagus
+                <span>
+                  <img th:if="${recipe.favorite}" th:src="@{/images/favorited.svg}" height="12px"/>
+                  <img th:src="@{/images/favorite.svg}" height="12px"/>
+                </span>
+                Recipe Name
               </p>
             </div>
           </a>
@@ -54,69 +57,6 @@
               <div class="flush-right">
                 <p>
                   <a href="edit.html"> <img src="images/edit.svg" height="12px"/> Edit </a>
-                  <a href="#"> <img src="images/delete.svg" height="12px"/> Delete </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div> <div class="clear"></div>
-
-        <div class="grid-100 row addHover">
-          <a href="detail.html">
-            <div class="grid-70">
-              <p>
-                <span><img src="images/favorited.svg" height="12px"/> </span>
-                Broiche French Toast with Nutella
-              </p>
-            </div>
-          </a>
-          <div class="hoverBlock">
-            <div class="grid-30">
-              <div class="flush-right">
-                <p>
-                  <a href="#"> <img src="images/edit.svg" height="12px"/> Edit </a>
-                  <a href="#"> <img src="images/delete.svg" height="12px"/> Delete </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div> <div class="clear"></div>
-
-        <div class="grid-100 row addHover">
-          <a href="detail.html">
-            <div class="grid-70">
-              <p>
-                <span><img src="images/favorite.svg" height="12px"/> </span>
-                Simple Miso Soup with Clams and Sake
-              </p>
-            </div>
-          </a>
-          <div class="hoverBlock">
-            <div class="grid-30">
-              <div class="flush-right">
-                <p>
-                  <a href="#"> <img src="images/edit.svg" height="12px"/> Edit </a>
-                  <a href="#"> <img src="images/delete.svg" height="12px"/> Delete </a>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div> <div class="clear"></div>
-
-        <div class="grid-100 row addHover">
-          <a href="detail.html">
-            <div class="grid-70">
-              <p>
-                <span><img src="images/favorite.svg" height="12px"/> </span>
-                Paleo Squash Noodles with Chicken Breast
-              </p>
-            </div>
-          </a>
-          <div class="hoverBlock">
-            <div class="grid-30">
-              <div class="flush-right">
-                <p>
-                  <a href="#"> <img src="images/edit.svg" height="12px"/> Edit </a>
                   <a href="#"> <img src="images/delete.svg" height="12px"/> Delete </a>
                 </p>
               </div>

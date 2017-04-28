@@ -31,4 +31,10 @@ public class RecipeServiceImpl implements RecipeService {
     public void delete(Recipe recipe) {
         recipeDao.delete(recipe);
     }
+
+    @Override
+    public void toggleFavorite(Recipe recipe) {
+        recipe.setFavorite(!recipe.isFavorite());
+        recipeDao.save(recipe);
+    }
 }

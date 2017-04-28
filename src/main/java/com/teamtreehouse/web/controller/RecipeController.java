@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class RecipeController {
         List<Recipe> recipes = recipeService.findAll();
 
         model.addAttribute("recipes", recipes);
+
         return "index";
     }
 
@@ -99,5 +101,14 @@ public class RecipeController {
 
         // Redirect browser to home page
         return "redirect:/";
+    }
+
+    // Mark/unmark an existing recipe as a favorite
+    @RequestMapping(value = "recipes/{recipeId}/favorite", method = RequestMethod.POST)
+    public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request) {
+        Recipe recipe = recipeService.findById(recipeId);
+        recipeService.toggleFavorite(recipe);
+
+        return String.format("redirect:%s", request.getHeader("referer"));
     }
 }
