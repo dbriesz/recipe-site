@@ -4,27 +4,9 @@
 <body>
 <div th:replace="layout :: nav"></div>
 
-<!--  <nav>
-    <a href="profile.html">
-      Chandra S.
-    </a>
-    &bull;
-    <a href="login.html">
-      logout
-    </a>
-  </nav>-->
-
   <div class="grid-container">
 
-    <div class="grid-100">
-      <a href="index.html">
-        <h1>
-          <img src="images/chefbot.svg" height="60px"/>
-          <br/>
-          My Recipes
-        </h1>
-      </a>
-    </div>
+      <div th:replace="layout :: header"></div>
 
     <div class="grid-100">
 

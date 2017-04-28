@@ -72,12 +72,12 @@ public class RecipeControllerTest {
             .andExpect(view().name("detail"));
     }
 
-/*    @Test
+    @Test
     public void formNewRecipeTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/add"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("/"));
-    }*/
+                .andExpect(view().name("edit"));
+    }
 
     @Test
     public void addNewRecipeTest() throws Exception {

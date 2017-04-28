@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="layout :: head('')"></head>
-<div th:replace="layout :: nav"></div>
 <body>
+<div th:replace="layout :: nav"></div>
 
   <div class="grid-container">
 
-    <div class="grid-100">
-      <a th:href="@{/}">
-        <h1>
-          <img src="images/chefbot.svg" height="60px"/>
-            <br/>
-          My Recipes
-        </h1>
-      </a>
-    </div>
+    <div th:replace="layout :: header"></div>
 
     <div class="grid-100">
 
@@ -35,7 +27,7 @@
           </div>
           <div class="grid-30">
             <div class="flush-right">
-              <button>+ Add Recipe</button>
+              <form th:action="@{/recipes/add}"><button>+ Add Recipe</button></form>
             </div>
           </div>
         </div> <div class="clear"></div>
@@ -44,7 +36,7 @@
           <a th:href="@{|/recipes/${recipe.id}/|}">
             <div class="grid-70">
               <p th:text="${recipe.name}">
-                <span><img src="images/favorite.svg" height="12px"/> </span>
+                <span><img th:src="@{/images/favorite.svg}" height="12px"/> </span>
                 Recipe Name
               </p>
             </div>

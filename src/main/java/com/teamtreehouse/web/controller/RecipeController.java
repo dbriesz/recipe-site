@@ -26,6 +26,7 @@ public class RecipeController {
         List<Recipe> recipes = recipeService.findAll();
 
         model.addAttribute("recipes", recipes);
+        model.addAttribute("action", "/recipes/add");
 
         return "index";
     }
@@ -41,7 +42,7 @@ public class RecipeController {
         return "detail";
     }
 
-/*    // Form for adding a new recipe
+    // Form for adding a new recipe
     @RequestMapping("recipes/add")
     public String formNewRecipe(Model model) {
         // Add model attributes needed for new form
@@ -50,8 +51,8 @@ public class RecipeController {
         }
         model.addAttribute("action", "/recipes/add");
 
-        return "";
-    }*/
+        return "edit";
+    }
 
     // Edit an existing recipe
     @RequestMapping("recipes/{recipeId}/edit")
