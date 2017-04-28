@@ -7,7 +7,7 @@
   <div class="grid-container">
 
     <div class="grid-100">
-      <a href="index.html">
+      <a th:href="@{/}">
         <h1>
           <img src="images/chefbot.svg" height="60px"/>
             <br/>
@@ -41,9 +41,9 @@
         </div> <div class="clear"></div>
 
         <div th:each="recipe : ${recipes}" class="grid-100 row addHover">
-          <a href="detail.html">
+          <a th:href="@{|/recipes/${recipe.id}/|}">
             <div class="grid-70">
-              <p th:href="@{|/recipes/${recipe.id}/|}" th:text="${recipe.name}">
+              <p th:text="${recipe.name}">
                 <span><img src="images/favorite.svg" height="12px"/> </span>
                 Recipe Name
               </p>
