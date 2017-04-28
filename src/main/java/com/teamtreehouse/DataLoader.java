@@ -31,9 +31,7 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-//        int prepTime = 1;
-//        int cookTime = 1;
-//        int quantity = 1;
+
         boolean value = false;
         List<Ingredient> ingredients = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
@@ -48,7 +46,7 @@ public class DataLoader implements ApplicationRunner {
             Ingredient ingredient = new Ingredient();
             ingredient.setRecipe(recipeService.findById((long) i));
             ingredient.setMeasurement("TestMeasurement " + i);
-            ingredient.setName("TestName " + i);
+            ingredient.setName("TestIngredient " + i);
             ingredient.setQuantity(i);
             ingredientService.save(ingredient);
             ingredients.add(ingredient);
@@ -66,7 +64,7 @@ public class DataLoader implements ApplicationRunner {
                     instructionService.findById((long) i))
             );
 
-            recipe.setName("TestName " + i);
+            recipe.setName("TestRecipe " + i);
             recipe.setDescription("TestDesc " + i);
 
             recipe.setImageUrl("TestUrl" + i);
@@ -74,10 +72,7 @@ public class DataLoader implements ApplicationRunner {
             recipe.setPrepTime(i + " minutes");
             recipe.setCookTime(i + " hours");
             recipe.setFavorite(value);
-//            prepTime++;
-//            cookTime++;
             value = !value;
-//            quantity++;
             recipeService.save(recipe);
         }
 

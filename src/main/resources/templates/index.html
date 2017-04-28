@@ -33,10 +33,10 @@
         </div> <div class="clear"></div>
 
         <div th:each="recipe : ${recipes}" class="grid-100 row addHover">
+          <div style="display: inline"><img th:src="${recipe.isFavorite()} ? @{/images/favorited.svg} : @{/images/favorite.svg}" height="12px"/> </div>
           <a th:href="@{|/recipes/${recipe.id}/|}">
             <div class="grid-70">
               <p th:text="${recipe.name}">
-                <span><img th:src="@{/images/favorite.svg}" height="12px"/> </span>
                 Recipe Name
               </p>
             </div>
