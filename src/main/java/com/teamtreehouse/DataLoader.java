@@ -31,25 +31,25 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        int prepTime = 1;
-        int cookTime = 1;
-        int quantity = 1;
+//        int prepTime = 1;
+//        int cookTime = 1;
+//        int quantity = 1;
         boolean value = false;
         List<Ingredient> ingredients = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
 
         for (int i = 1; i <= 5; i++) {
             Category category = new Category();
-            category.setName("Category " + 1);
+            category.setName("Category " + i);
             categoryService.save(category);
 
             Recipe recipe = new Recipe();
             recipe.setCategory(category);
             Ingredient ingredient = new Ingredient();
             ingredient.setRecipe(recipeService.findById((long) i));
-            ingredient.setMeasurement("TestMeasurement " + 1);
-            ingredient.setName("TestName " + 1);
-            ingredient.setQuantity(quantity);
+            ingredient.setMeasurement("TestMeasurement " + i);
+            ingredient.setName("TestName " + i);
+            ingredient.setQuantity(i);
             ingredientService.save(ingredient);
             ingredients.add(ingredient);
             recipe.setIngredients(Collections.singletonList(
@@ -58,27 +58,26 @@ public class DataLoader implements ApplicationRunner {
 
             Instruction instruction = new Instruction();
             instruction.setRecipe(recipeService.findById((long) i));
-            instruction.setDescription("TestDescription " + 1);
-            instruction.setCookingInstruction("TestCookingInstruction " + 1);
+            instruction.setDescription("TestDescription " + i);
+            instruction.setCookingInstruction("TestCookingInstruction " + i);
             instructionService.save(instruction);
             instructions.add(instruction);
             recipe.setInstructions(Collections.singletonList(
                     instructionService.findById((long) i))
             );
 
-            recipe.setName("TestName " + 1);
-            recipe.setDescription("TestDesc " + 1);
+            recipe.setName("TestName " + i);
+            recipe.setDescription("TestDesc " + i);
 
-            recipe.setImageUrl("TestUrl" + 1);
-            recipe.addIngredient(ingredient);
-            recipe.addInstruction(instruction);
-            recipe.setPrepTime(prepTime + " minutes");
-            recipe.setCookTime(cookTime + " hours");
+            recipe.setImageUrl("TestUrl" + i);
+
+            recipe.setPrepTime(i + " minutes");
+            recipe.setCookTime(i + " hours");
             recipe.setFavorite(value);
-            prepTime++;
-            cookTime++;
+//            prepTime++;
+//            cookTime++;
             value = !value;
-            quantity++;
+//            quantity++;
             recipeService.save(recipe);
         }
 
