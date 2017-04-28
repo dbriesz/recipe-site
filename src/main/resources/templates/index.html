@@ -42,8 +42,8 @@
 
         <div class="grid-100 row addHover">
           <a href="detail.html">
-            <div class="grid-70">
-              <p>
+            <div th:each="recipe : ${recipes}" class="grid-70">
+              <p th:href="@{|/recipes/${recipe.id}/|}" th:text="${recipe.name}">
                 <span><img src="images/favorite.svg" height="12px"/> </span>
                 Baked Alaskan Salmon with Asparagus
               </p>
