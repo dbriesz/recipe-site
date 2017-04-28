@@ -59,6 +59,14 @@ public class Recipe {
         return instructions;
     }
 
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public void setInstructions(List<Instruction> instructions) {
+        this.instructions = instructions;
+    }
+
     public Long getId() {
         return id;
     }

@@ -11,6 +11,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -34,6 +35,8 @@ public class DataLoader implements ApplicationRunner {
         int cookTime = 1;
         int quantity = 1;
         boolean value = false;
+        List<Ingredient> ingredients = new ArrayList<>();
+        List<Instruction> instructions = new ArrayList<>();
 
         for (int i = 1; i <= 5; i++) {
             Category category = new Category();
@@ -41,22 +44,31 @@ public class DataLoader implements ApplicationRunner {
             categoryService.save(category);
 
             Recipe recipe = new Recipe();
+            recipe.setCategory(category);
             Ingredient ingredient = new Ingredient();
-            ingredient.setRecipe(recipe);
+            ingredient.setRecipe(recipeService.findById((long) i));
             ingredient.setMeasurement("TestMeasurement " + 1);
             ingredient.setName("TestName " + 1);
             ingredient.setQuantity(quantity);
             ingredientService.save(ingredient);
+            ingredients.add(ingredient);
+            recipe.setIngredients(Collections.singletonList(
+                    ingredientService.findById((long) i))
+            );
 
             Instruction instruction = new Instruction();
-            instruction.setRecipe(recipe);
+            instruction.setRecipe(recipeService.findById((long) i));
             instruction.setDescription("TestDescription " + 1);
             instruction.setCookingInstruction("TestCookingInstruction " + 1);
             instructionService.save(instruction);
+            instructions.add(instruction);
+            recipe.setInstructions(Collections.singletonList(
+                    instructionService.findById((long) i))
+            );
 
             recipe.setName("TestName " + 1);
             recipe.setDescription("TestDesc " + 1);
-            recipe.setCategory(category);
+
             recipe.setImageUrl("TestUrl" + 1);
             recipe.addIngredient(ingredient);
             recipe.addInstruction(instruction);
