@@ -26,15 +26,23 @@ public class RecipeController {
     // Home page - index of all recipes
     @SuppressWarnings("unchecked")
     @RequestMapping("/")
-    public String listRecipes(@PathVariable Long categoryId, Model model) {
+    public String listRecipes(Model model) {
         List<Recipe> recipes = recipeService.findAll();
         List<Category> categories = categoryService.findAll();
-        if (!model.containsAttribute("category")) {
-            model.addAttribute("category", categoryService.findById(categoryId));
-        }
+
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/recipes/add");
-        model.addAttribute("action", String.format("/categories/%s",categoryId));
+        model.addAttribute("categories", categories);
+
+        return "index";
+    }
+
+    @RequestMapping("/categories/{categoryId}")
+    public String category(@PathVariable Long categoryId, Model model) {
+        Category category = categoryService.findById(categoryId);
+
+
+        model.addAttribute("action", String.format("/categories/%s", categoryId));
 
         return "index";
     }

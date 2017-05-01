@@ -14,9 +14,9 @@
 
         <div class="grid-100 row controls">
           <div class="grid-30">
-            <select th:each="category : ${categories}">
+            <select>
               <option value="">All Categories</option>
-              <option th:href="@{|/categories/${category.id}|}" th:text="${cat.name}">Category</option>
+              <option th:each="category : ${categories}" th:value="${category}" th:text="${category.name}">Category</option>
             </select>
           </div>
           <div class="grid-40">
