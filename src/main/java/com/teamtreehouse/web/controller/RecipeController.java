@@ -1,6 +1,8 @@
 package com.teamtreehouse.web.controller;
 
+import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Recipe;
+import com.teamtreehouse.service.CategoryService;
 import com.teamtreehouse.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,15 +20,21 @@ import java.util.List;
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
+    @Autowired
+    private CategoryService categoryService;
 
     // Home page - index of all recipes
     @SuppressWarnings("unchecked")
     @RequestMapping("/")
-    public String listRecipes(Model model) {
+    public String listRecipes(@PathVariable Long categoryId, Model model) {
         List<Recipe> recipes = recipeService.findAll();
-
+        List<Category> categories = categoryService.findAll();
+        if (!model.containsAttribute("category")) {
+            model.addAttribute("category", categoryService.findById(categoryId));
+        }
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/recipes/add");
+        model.addAttribute("action", String.format("/categories/%s",categoryId));
 
         return "index";
     }
@@ -95,9 +103,10 @@ public class RecipeController {
 
     // Delete an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
-    public String deleteProject(@PathVariable Long recipeId) {
+    public String deleteRecipe(@PathVariable Long recipeId, Model model) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
+        model.addAttribute("action", String.format("/recipes/%s/delete", recipeId));
         recipeService.delete(recipe);
 
         // Redirect browser to home page
