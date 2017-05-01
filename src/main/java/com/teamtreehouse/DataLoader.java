@@ -57,7 +57,6 @@ public class DataLoader implements ApplicationRunner {
             Instruction instruction = new Instruction();
             instruction.setRecipe(recipeService.findById((long) i));
             instruction.setDescription("TestDescription " + i);
-            instruction.setCookingInstruction("TestCookingInstruction " + i);
             instructionService.save(instruction);
             instructions.add(instruction);
             recipe.setInstructions(Collections.singletonList(

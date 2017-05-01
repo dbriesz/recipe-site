@@ -3,6 +3,8 @@ package com.teamtreehouse.web.controller;
 import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Recipe;
 import com.teamtreehouse.service.CategoryService;
+import com.teamtreehouse.service.IngredientService;
+import com.teamtreehouse.service.InstructionService;
 import com.teamtreehouse.service.RecipeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -22,6 +25,10 @@ public class RecipeController {
     private RecipeService recipeService;
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private IngredientService ingredientService;
+    @Autowired
+    private InstructionService instructionService;
 
     // Home page - index of all recipes
     @SuppressWarnings("unchecked")
@@ -37,12 +44,15 @@ public class RecipeController {
         return "index";
     }
 
-    @RequestMapping("/categories/{categoryId}")
-    public String category(@PathVariable Long categoryId, Model model) {
-        Category category = categoryService.findById(categoryId);
+    // List of recipes based on selected category
+    @RequestMapping("/category")
+    public String category(@RequestParam String category, Model model) {
+        List<Category> categories = categoryService.findAll();
+        List<Recipe> recipes = recipeService.findByCategoryName(category);
 
-
-        model.addAttribute("action", String.format("/categories/%s", categoryId));
+        model.addAttribute("categories", categories);
+        model.addAttribute("recipes", recipes);
+        model.addAttribute("action", "/category");
 
         return "index";
     }
@@ -66,6 +76,8 @@ public class RecipeController {
             model.addAttribute("recipe", new Recipe());
         }
         model.addAttribute("action", "/recipes/add");
+        model.addAttribute("ingredients", ingredientService.findAll());
+        model.addAttribute("instructions", instructionService.findAll());
 
         return "edit";
     }
@@ -79,6 +91,8 @@ public class RecipeController {
             model.addAttribute("recipe", recipe);
         }
         model.addAttribute("action", String.format("/recipes/%s/edit", recipeId));
+        model.addAttribute("ingredients", ingredientService.findAll());
+        model.addAttribute("instructions", instructionService.findAll());
 
         return "edit";
     }

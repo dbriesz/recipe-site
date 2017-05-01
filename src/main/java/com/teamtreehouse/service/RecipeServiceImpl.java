@@ -1,6 +1,7 @@
 package com.teamtreehouse.service;
 
 import com.teamtreehouse.dao.RecipeDao;
+import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,5 +37,10 @@ public class RecipeServiceImpl implements RecipeService {
     public void toggleFavorite(Recipe recipe) {
         recipe.setFavorite(!recipe.isFavorite());
         recipeDao.save(recipe);
+    }
+
+    @Override
+    public List<Recipe> findByCategoryName(String categoryName) {
+        return recipeDao.findByCategoryName(categoryName);
     }
 }

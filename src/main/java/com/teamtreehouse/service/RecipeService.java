@@ -10,4 +10,5 @@ public interface RecipeService {
     void save(Recipe recipe);
     void delete(Recipe recipe);
     void toggleFavorite(Recipe recipe);
+    List<Recipe> findByCategoryName(String categoryName);
 }
