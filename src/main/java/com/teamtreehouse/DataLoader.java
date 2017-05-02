@@ -44,24 +44,54 @@ public class DataLoader implements ApplicationRunner {
             Recipe recipe = new Recipe();
             recipe.setCategory(category);
             Ingredient ingredient = new Ingredient();
+            Ingredient ingredient2 = new Ingredient();
+
             ingredient.setRecipe(recipeService.findById((long) i));
+            ingredient2.setRecipe(recipeService.findById((long) i));
+
             ingredient.setMeasurement("TestMeasurement " + i);
+            ingredient2.setMeasurement("TestMeasurement " + i);
+
             ingredient.setName("TestIngredient " + i);
+            ingredient2.setName("AnotherTestIngredient " + i);
+
             ingredient.setQuantity(i);
+            ingredient2.setQuantity(i);
+
             ingredientService.save(ingredient);
+            ingredientService.save(ingredient2);
+
             ingredients.add(ingredient);
-            recipe.setIngredients(Collections.singletonList(
+            ingredients.add(ingredient2);
+
+            recipe.addIngredient(ingredient);
+            recipe.addIngredient(ingredient2);
+
+/*            recipe.setIngredients(Collections.singletonList(
                     ingredientService.findById((long) i))
-            );
+            );*/
 
             Instruction instruction = new Instruction();
+            Instruction instruction2 = new Instruction();
+
             instruction.setRecipe(recipeService.findById((long) i));
+            instruction2.setRecipe(recipeService.findById((long) i));
+
             instruction.setDescription("TestDescription " + i);
+            instruction2.setDescription("AnotherTestDescription " + i);
+
             instructionService.save(instruction);
+            instructionService.save(instruction2);
+
             instructions.add(instruction);
-            recipe.setInstructions(Collections.singletonList(
+            instructions.add(instruction2);
+
+            recipe.addInstruction(instruction);
+            recipe.addInstruction(instruction2);
+
+/*            recipe.setInstructions(Collections.singletonList(
                     instructionService.findById((long) i))
-            );
+            );*/
 
             recipe.setName("TestRecipe " + i);
             recipe.setDescription("TestDesc " + i);
@@ -74,7 +104,5 @@ public class DataLoader implements ApplicationRunner {
             value = !value;
             recipeService.save(recipe);
         }
-
-
     }
 }
