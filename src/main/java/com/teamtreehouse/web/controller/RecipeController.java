@@ -76,6 +76,8 @@ public class RecipeController {
             model.addAttribute("recipe", new Recipe());
         }
         model.addAttribute("action", "/recipes/add");
+        List<Category> categories = categoryService.findAll();
+        model.addAttribute("categories", categories);
         model.addAttribute("ingredients", ingredientService.findAll());
         model.addAttribute("instructions", instructionService.findAll());
 
@@ -91,6 +93,7 @@ public class RecipeController {
             model.addAttribute("recipe", recipe);
         }
         model.addAttribute("action", String.format("/recipes/%s/edit", recipeId));
+        List<Category> categories = categoryService.findAll();
         model.addAttribute("ingredients", ingredientService.findAll());
         model.addAttribute("instructions", instructionService.findAll());
 
