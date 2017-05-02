@@ -68,8 +68,8 @@ public class DataLoader implements ApplicationRunner {
 
             recipe.setImageUrl("TestUrl" + i);
 
-            recipe.setPrepTime(i + " minutes");
-            recipe.setCookTime(i + " hours");
+            recipe.setPrepTime(i + 1 + " minutes");
+            recipe.setCookTime(i + 1 + " hours");
             recipe.setFavorite(value);
             value = !value;
             recipeService.save(recipe);

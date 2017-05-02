@@ -15,7 +15,7 @@ public class Instruction {
     public Instruction() {
     }
 
-    public Instruction(String description, String cookingInstruction) {
+    public Instruction(String description) {
         this.description = description;
     }
 

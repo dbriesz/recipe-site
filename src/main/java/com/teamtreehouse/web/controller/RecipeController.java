@@ -1,6 +1,8 @@
 package com.teamtreehouse.web.controller;
 
 import com.teamtreehouse.domain.Category;
+import com.teamtreehouse.domain.Ingredient;
+import com.teamtreehouse.domain.Instruction;
 import com.teamtreehouse.domain.Recipe;
 import com.teamtreehouse.service.CategoryService;
 import com.teamtreehouse.service.IngredientService;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -77,9 +80,12 @@ public class RecipeController {
         }
         model.addAttribute("action", "/recipes/add");
         List<Category> categories = categoryService.findAll();
+        model.addAttribute("heading", "New Recipe");
         model.addAttribute("categories", categories);
-        model.addAttribute("ingredients", ingredientService.findAll());
-        model.addAttribute("instructions", instructionService.findAll());
+        List<Ingredient> ingredients = new ArrayList<>();
+        List<Instruction> instructions = new ArrayList<>();
+        model.addAttribute("ingredients", ingredients);
+        model.addAttribute("instructions", instructions);
 
         return "edit";
     }
@@ -93,7 +99,9 @@ public class RecipeController {
             model.addAttribute("recipe", recipe);
         }
         model.addAttribute("action", String.format("/recipes/%s/edit", recipeId));
+        model.addAttribute("heading", "Recipe Editor");
         List<Category> categories = categoryService.findAll();
+        model.addAttribute("categories", categories);
         model.addAttribute("ingredients", ingredientService.findAll());
         model.addAttribute("instructions", instructionService.findAll());
 
