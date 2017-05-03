@@ -15,12 +15,28 @@ $('#add-ingredient').on('click', function () {
         '.quantity" name="ingredients[' + ingredientIndex + '].quantity"/>'
 
     );
-    var html = $('<div class="ingredient-row">'+ '<div class="prefix-20 grid-30">' + ingredientId + '<p>' + ingredientName + '</p>'
-        + '</div>' + '<div class="grid-30">' + '<p>' + ingredientMeasurement + '</p>' + '</div>' + '<div class="grid-10 suffix-10">'
-        + '<p>' + ingredientQuantity + '</p>' + '</div>' + '</div>'
+    var html = $('<div class="ingredient-row"><div class="prefix-20 grid-30">' + ingredientId + '<p>' + ingredientName +
+        '</p></div><div class="grid-30"><p>' + ingredientMeasurement + '</p></div><div class="grid-10 suffix-10"><p>' +
+        ingredientQuantity + '</p></div></div>'
     );
 
     $(".input").before(html);
 });
 
+$('#add-instruction').on('click', function () {
+   var instructionIndex = $("#step-row").length();
 
+   var instructionId = $('<input type="hidden" value="' + instructionIndex + 1 + '" id="instructions' + instructionIndex + '.id" ' +
+       'name="instructions[' + instructionIndex + '].id">'
+   );
+
+   var instructionDesc = $('<input type="text" id="instructions' + instructionIndex + '.description" name="instructions[' +
+       '].description" value="TestDescription ' + instructionIndex + 1 + '">'
+   );
+
+   var html = $('<div class="step-row"><div class="prefix-20 grid-80">' + instructionId + '<p>' +
+        instructionDesc + '</p></div></div>'
+   );
+
+   $(".input").before(html);
+});
