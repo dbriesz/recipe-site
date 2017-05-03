@@ -67,10 +67,6 @@ public class DataLoader implements ApplicationRunner {
             recipe.addIngredient(ingredient);
             recipe.addIngredient(ingredient2);
 
-/*            recipe.setIngredients(Collections.singletonList(
-                    ingredientService.findById((long) i))
-            );*/
-
             Instruction instruction = new Instruction();
             Instruction instruction2 = new Instruction();
 
@@ -88,10 +84,6 @@ public class DataLoader implements ApplicationRunner {
 
             recipe.addInstruction(instruction);
             recipe.addInstruction(instruction2);
-
-/*            recipe.setInstructions(Collections.singletonList(
-                    instructionService.findById((long) i))
-            );*/
 
             recipe.setName("TestRecipe " + i);
             recipe.setDescription("TestDesc " + i);
