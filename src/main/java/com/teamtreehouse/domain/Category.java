@@ -10,7 +10,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    @OneToMany(mappedBy = "category")
+    @OneToMany
     private List<Recipe> recipes = new ArrayList<>();
 
     public Category() {
