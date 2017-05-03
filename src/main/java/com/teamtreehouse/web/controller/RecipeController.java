@@ -51,8 +51,12 @@ public class RecipeController {
     @RequestMapping("/category")
     public String category(@RequestParam String category, Model model) {
         List<Category> categories = categoryService.findAll();
-        List<Recipe> recipes = recipeService.findByCategoryName(category);
-
+        List<Recipe> recipes;
+        if (category.equals("")) {
+            recipes = recipeService.findAll();
+        } else {
+            recipes = recipeService.findByCategoryName(category);
+        }
         model.addAttribute("categories", categories);
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/category");
