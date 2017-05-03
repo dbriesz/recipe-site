@@ -19,7 +19,7 @@
           <div class="grid-50">
             <div class="flush-right">
               <button type="submit" style="display: inline-block">Save Recipe</button>
-              <form style="display: inline-block" th:action="@{/}"><button class="secondary">Cancel</button></form>
+              <button type="button" style="display: inline-block" class="secondary"><a th:href="@{/}">Cancel</a></button>
             </div>
           </div>
         </div> <div class="clear"></div>
@@ -150,7 +150,7 @@
 
                 <div class="prefix-20 grid-80 add-row">
                   <p>
-                    <button class="add-ingredient">+ Add Another Ingredient</button>
+                    <button type="button" class="add-ingredient">+ Add Another Ingredient</button>
                   </p>
                 </div>
 
@@ -179,7 +179,7 @@
 
                   <div class="prefix-20 grid-80 add-row">
                     <p>
-                      <button class="add-instruction">+ Add Another Step</button>
+                      <button type="button" class="add-instruction">+ Add Another Step</button>
                     </p>
                   </div>
 
@@ -191,5 +191,7 @@
               </form>
             </div> <!-- grid-100 -->
           </div> <!-- grid-container -->
+
+        <script th:src="@{/assets/js/app.js}" type="text/javascript" charset="utf-8"></script>
         </body>
         </html>

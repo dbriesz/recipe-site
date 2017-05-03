@@ -6,12 +6,8 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge"/>
     <title th:text="${page_title} + ' | My Recipes'">My Recipes</title>
     <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'/>
-    <link rel="stylesheet" th:href="@{/css/unsemantic-grid-responsive.css}"/>
-    <link rel="stylesheet" th:href="@{/css/styles.css}"/>
-    <script
-            src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-            crossorigin="anonymous"></script>
-    <script src="js/app.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" th:href="@{/assets/css/unsemantic-grid-responsive.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/styles.css}"/>
 </head>
 
 <body>
@@ -31,12 +27,14 @@
 <div th:fragment="header" class="grid-100">
     <a th:href="@{/}">
         <h1>
-            <img th:src="@{/images/chefbot.svg}" height="60px"/>
+            <img th:src="@{/assets/images/chefbot.svg}" height="60px"/>
             <br/>
             My Recipes
         </h1>
     </a>
 </div>
-
+<script
+        src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+        crossorigin="anonymous"></script>
 </body>
 </html>

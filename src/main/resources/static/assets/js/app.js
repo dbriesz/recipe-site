@@ -1,5 +1,5 @@
 $('#add-ingredient').on('click', function () {
-    var ingredientIndex = $("#ingredient-row").length();
+    var ingredientIndex = $(".ingredient-row").length();
 
     var ingredientId = $('<input type="hidden" value="' + ingredientIndex + 1 + '" id="ingredients' + ingredientIndex + '.id" ' +
         'name="ingredients[' + ingredientIndex + '].id"/>'
@@ -20,11 +20,11 @@ $('#add-ingredient').on('click', function () {
         ingredientQuantity + '</p></div></div>'
     );
 
-    $(".input").before(html);
+    $("#add-ingredient").before(html);
 });
 
 $('#add-instruction').on('click', function () {
-   var instructionIndex = $("#step-row").length();
+   var instructionIndex = $(".step-row").length();
 
    var instructionId = $('<input type="hidden" value="' + instructionIndex + 1 + '" id="instructions' + instructionIndex + '.id" ' +
        'name="instructions[' + instructionIndex + '].id">'
@@ -38,5 +38,5 @@ $('#add-instruction').on('click', function () {
         instructionDesc + '</p></div></div>'
    );
 
-   $(".input").before(html);
+   $("#add-instruction").before(html);
 });
