@@ -33,23 +33,22 @@
         </div> <div class="clear"></div>
 
         <div th:each="recipe : ${recipes}" class="grid-100 row addHover">
-          <div style="display: inline"><img th:src="${recipe.isFavorite()} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="12px"/> </div>
+          <div><img th:src="${recipe.isFavorite()} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="12px"/> </div>
           <a th:href="@{|/recipes/${recipe.id}/|}">
-            <div style="display: inline" class="grid-70">
-              <p  th:text="${recipe.name}">
+            <div class="grid-70">
+              <p style="display: inline; margin-left: 5%" th:text="${recipe.name}">
                 Recipe Name
               </p>
             </div>
           </a>
           <div class="hoverBlock">
-            <div class="grid-30">
-              <div class="flush-right">
-                <p>
+              <div>
                   <a th:href="@{|/recipes/${recipe.id}/edit|}"> <img th:src="@{/assets/images/edit.svg}" height="12px"/> Edit </a>
-                <form th:action="@{|/recipes/${recipe.id}/delete|}" method="post"><button type="submit"><img th:src="@{/assets/images/delete.svg}" height="12px"/> Delete </button></form>
-                </p>
+                <form style="display: inline" th:action="@{|/recipes/${recipe.id}/delete|}" method="post">
+                  <button style="background: transparent; color: #808080; margin-left: 0px" type="submit">
+                  <img th:src="@{/assets/images/delete.svg}" height="12px"/> Delete </button>
+                </form>
               </div>
-            </div>
           </div>
         </div> <div class="clear"></div>
 
