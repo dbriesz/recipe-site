@@ -143,7 +143,6 @@ public class RecipeController {
     public String deleteRecipe(@PathVariable Long recipeId, Model model) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
-        model.addAttribute("action", String.format("/recipes/%s/delete", recipeId));
         recipeService.delete(recipe);
 
         // Redirect browser to home page

@@ -4,6 +4,9 @@ import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Ingredient;
 import com.teamtreehouse.domain.Instruction;
 import com.teamtreehouse.domain.Recipe;
+import com.teamtreehouse.service.CategoryService;
+import com.teamtreehouse.service.IngredientService;
+import com.teamtreehouse.service.InstructionService;
 import com.teamtreehouse.service.RecipeService;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +34,15 @@ public class RecipeControllerTest {
     @Mock
     private RecipeService recipeService;
 
+    @Mock
+    private CategoryService categoryService;
+
+    @Mock
+    private IngredientService ingredientService;
+
+    @Mock
+    private InstructionService instructionService;
+
     @InjectMocks
     private RecipeController recipeController;
     private MockMvc mockMvc;
@@ -47,6 +59,7 @@ public class RecipeControllerTest {
 
     @Test
     public void getIndex() throws Exception {
+        List<Category> categories = new ArrayList<>();
         Recipe recipe = recipeBuilder();
         Recipe recipe2 = recipeBuilder();
 
@@ -55,6 +68,7 @@ public class RecipeControllerTest {
         recipes.add(recipe2);
 
         when(recipeService.findAll()).thenReturn(recipes);
+        when(categoryService.findAll()).thenReturn(categories);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
             .andExpect(status().isOk())
@@ -74,6 +88,10 @@ public class RecipeControllerTest {
 
     @Test
     public void formNewRecipeTest() throws Exception {
+        List<Category> categories = new ArrayList<>();
+
+        when(categoryService.findAll()).thenReturn(categories);
+
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/add"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("edit"));
@@ -92,9 +110,15 @@ public class RecipeControllerTest {
 
     @Test
     public void getEditRecipePageTest() throws Exception {
+        List<Category> categories = new ArrayList<>();
+        List<Ingredient> ingredients = new ArrayList<>();
+        List<Instruction> instructions = new ArrayList<>();
         Recipe recipe = recipeBuilder();
 
         when(recipeService.findById(1L)).thenReturn(recipe);
+        when(categoryService.findAll()).thenReturn(categories);
+        when(ingredientService.findAll()).thenReturn(ingredients);
+        when(instructionService.findAll()).thenReturn(instructions);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/1/edit"))
             .andExpect(status().isOk())
