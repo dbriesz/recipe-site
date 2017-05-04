@@ -119,6 +119,8 @@ public class RecipeController {
         if (result.hasErrors()) {
             System.out.println(result.getAllErrors());
         } else {
+            recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
+            recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
             recipeService.save(recipe);
         }
 
@@ -130,8 +132,12 @@ public class RecipeController {
     @RequestMapping(value = "recipes/{recipeId}/edit", method = RequestMethod.POST)
     public String updateRecipe(@Valid Recipe recipe) {
         // Update recipe if valid data was received
-        Recipe originalRecipe = recipeService.findById(recipe.getId());
-
+        Category category = recipe.getCategory();
+        if (category != null) {
+            recipe.setCategory(category);
+        }
+        recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
+        recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
         recipeService.save(recipe);
 
         // Redirect browser to recipe detail page
@@ -140,7 +146,7 @@ public class RecipeController {
 
     // Delete an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
-    public String deleteRecipe(@PathVariable Long recipeId, Model model) {
+    public String deleteRecipe(@PathVariable Long recipeId) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
         recipeService.delete(recipe);

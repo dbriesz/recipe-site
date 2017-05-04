@@ -1,19 +1,16 @@
 $('#add-ingredient').on('click', function () {
     var ingredientIndex = $(".ingredient-row").length;
 
-    var ingredientValue = ingredientIndex++;
-
-    var ingredientId = '<input type="hidden" value="' + ingredientValue + '" id="ingredients' + ingredientIndex + '.id" ' +
+    var ingredientId = '<input type="hidden" id="ingredients' + ingredientIndex + '.id" ' +
         'name="ingredients[' + ingredientIndex + '].id"/>'
     ;
-    var ingredientName = '<input type="text" value="TestIngredient ' + ingredientIndex +
-        '" id="ingredients[' + ingredientIndex + '].name" name="ingredients[' + ingredientIndex + '].name"/>'
+    var ingredientName = '<input type="text" id="ingredients[' + ingredientIndex + '].name" name="ingredients[' + ingredientIndex + '].name"/>'
     ;
-    var ingredientMeasurement = '<input type="text" value="TestMeasurement ' + ingredientIndex + '" id="ingredients' +
+    var ingredientMeasurement = '<input type="text" id="ingredients' +
         ingredientIndex + '.measurement" name="ingredients[' + ingredientIndex + '].measurement"/>'
     ;
 
-    var ingredientQuantity = '<input type="text" value="' + ingredientIndex + '" id="ingredients' + ingredientIndex +
+    var ingredientQuantity = '<input type="text" id="ingredients' + ingredientIndex +
         '.quantity" name="ingredients[' + ingredientIndex + '].quantity"/>'
 
     ;
@@ -28,14 +25,12 @@ $('#add-ingredient').on('click', function () {
 $('#add-instruction').on('click', function () {
    var instructionIndex = $(".step-row").length;
 
-   var instructionValue = instructionIndex++;
-
-   var instructionId = '<input type="hidden" value="' + instructionValue + '" id="instructions' + instructionIndex + '.id" ' +
-       'name="instructions[' + instructionIndex + '].id">'
+   var instructionId = '<input type="hidden" id="instructions' + instructionIndex + '.id" ' +
+       'name="instructions[' + instructionIndex + '].id"/>'
    ;
 
    var instructionDesc = '<input type="text" id="instructions' + instructionIndex + '.description" name="instructions[' +
-       '].description" value="TestDescription ' + instructionIndex + '">'
+       '].description"/>'
    ;
 
    var html = '<div class="step-row"><div class="prefix-20 grid-80">' + instructionId + '<p>'
