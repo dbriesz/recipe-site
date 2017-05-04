@@ -29,8 +29,8 @@ $('#add-instruction').on('click', function () {
        'name="instructions[' + instructionIndex + '].id"/>'
    ;
 
-   var instructionDesc = '<input type="text" id="instructions' + instructionIndex + '.description" name="instructions[' +
-       '].description"/>'
+   var instructionDesc = '<input type="text" id="instructions' + instructionIndex +
+       '.description" name="instructions[' + instructionIndex + '].description"/>'
    ;
 
    var html = '<div class="step-row"><div class="prefix-20 grid-80">' + instructionId + '<p>'
