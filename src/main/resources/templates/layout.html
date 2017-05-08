@@ -33,5 +33,10 @@
         </h1>
     </a>
 </div>
+<div th:fragment="flash" th:if="${flash != null}">
+    <div class="message">
+        <div th:classappend="${#strings.toLowerCase(flash.status)}" th:text="${flash.message}" class="flash"></div>
+    </div>
+</div>
 </body>
 </html>

@@ -8,22 +8,30 @@ import com.teamtreehouse.service.CategoryService;
 import com.teamtreehouse.service.IngredientService;
 import com.teamtreehouse.service.InstructionService;
 import com.teamtreehouse.service.RecipeService;
+import com.teamtreehouse.web.FlashMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.FlashMap;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.teamtreehouse.web.FlashMessage.Status.FAILURE;
+import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
+
 @Controller
 public class RecipeController {
+    final Logger logger = LoggerFactory.getLogger(RecipeController.class);
+
     @Autowired
     private RecipeService recipeService;
     @Autowired
@@ -114,14 +122,17 @@ public class RecipeController {
 
     // Add a recipe
     @RequestMapping(value = "recipes/add", method = RequestMethod.POST)
-    public String addRecipe(@Valid Recipe recipe, BindingResult result) {
+    public String addRecipe(@Valid Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
         // Add recipe if valid data was received
         if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("Invalid input. Ingredient quantity must be a number. Please try again.", FlashMessage.Status.FAILURE));
+            return "redirect:/recipes/add";
         } else {
             recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
             recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
             recipeService.save(recipe);
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("New recipe added!", FlashMessage.Status.SUCCESS));
         }
 
         // Redirect browser to home page
@@ -130,26 +141,35 @@ public class RecipeController {
 
     // Update an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/edit", method = RequestMethod.POST)
-    public String updateRecipe(@Valid Recipe recipe) {
+    public String updateRecipe(@Valid Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
         // Update recipe if valid data was received
         Category category = recipe.getCategory();
         if (category != null) {
             recipe.setCategory(category);
         }
-        recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
-        recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
-        recipeService.save(recipe);
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("Invalid input. Ingredient quantity must be a number. Please try again.", FlashMessage.Status.FAILURE));
+            return String.format("redirect:/recipes/%s/edit", recipe.getId());
+        } else {
+            recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
+            recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
+            recipeService.save(recipe);
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe updated!", FlashMessage.Status.SUCCESS));
 
-        // Redirect browser to recipe detail page
-        return String.format("redirect:/recipes/%s", recipe.getId());
+            // Redirect browser to recipe detail page
+            return String.format("redirect:/recipes/%s", recipe.getId());
+        }
     }
 
     // Delete an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
-    public String deleteRecipe(@PathVariable Long recipeId) {
+    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
+
         recipeService.delete(recipe);
+        redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted!", FlashMessage.Status.SUCCESS));
 
         // Redirect browser to home page
         return "redirect:/";
@@ -162,5 +182,12 @@ public class RecipeController {
         recipeService.toggleFavorite(recipe);
 
         return String.format("redirect:%s", request.getHeader("referer"));
+    }
+
+    @ExceptionHandler(value = NumberFormatException.class)
+    public String nfeHandler(HttpServletRequest request, NumberFormatException ex) {
+        FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
+        flashMap.put("flash", new FlashMessage(ex.getMessage(), FAILURE));
+        return "redirect:" + request.getHeader("referer");
     }
 }

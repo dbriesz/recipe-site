@@ -5,6 +5,7 @@ import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Ingredient;
 import com.teamtreehouse.domain.Instruction;
 import com.teamtreehouse.domain.Recipe;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,19 +25,29 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class RecipeServiceTest {
 
+    private List<Recipe> recipes;
+    private Recipe recipe1;
+    private Recipe recipe2;
+
     @Mock
     private RecipeDao dao;
 
     @InjectMocks
     private RecipeService service = new RecipeServiceImpl();
 
+    @Before
+    public void setUp() throws Exception {
+        List<Ingredient> ingredients = new ArrayList<>();
+        List<Instruction> instructions = new ArrayList<>();
+        recipe1 = new Recipe("TestName 1", "TestDesc 1", new Category("test"),
+                "TestUrl 1", ingredients, instructions, "Test PrepTime 1", "Test CookTime 1", false);
+        recipe2 = new Recipe("TestName 2", "TestDesc 2", new Category("test"),
+                "TestUrl 2", ingredients, instructions, "Test PrepTime 2", "Test CookTime 2", true);
+        recipes = Arrays.asList(recipe1, recipe2);
+    }
+
     @Test
     public void findAll_ShouldReturnTwo() throws Exception {
-        List<Recipe> recipes = Arrays.asList(
-                new Recipe(),
-                new Recipe()
-        );
-
         when(dao.findAll()).thenReturn(recipes);
 
         assertEquals("findAll should return two recipes", 2, service.findAll().size());
@@ -52,15 +63,6 @@ public class RecipeServiceTest {
 
     @Test
     public void findByCategoryName_ShouldReturnTwo() throws Exception {
-        List<Ingredient> ingredients = new ArrayList<>();
-        List<Instruction> instructions = new ArrayList<>();
-        List<Recipe> recipes = Arrays.asList(
-                new Recipe("TestName 1", "TestDesc 1", new Category("test"),
-                        "TestUrl 1", ingredients, instructions, "Test PrepTime 1", "Test CookTime 1", false),
-                new Recipe("TestName 2", "TestDesc 2", new Category("test"),
-                        "TestUrl 2", ingredients, instructions, "Test PrepTime 2", "Test CookTime 2", true)
-        );
-
         when(dao.findByCategoryName("test")).thenReturn(recipes);
 
         assertEquals("findByCategoryName should return two recipes", 2, service.findByCategoryName("test").size());
