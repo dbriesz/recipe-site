@@ -8,12 +8,18 @@ import com.teamtreehouse.service.CategoryService;
 import com.teamtreehouse.service.IngredientService;
 import com.teamtreehouse.service.InstructionService;
 import com.teamtreehouse.service.RecipeService;
+import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.mockito.Matchers.contains;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -145,6 +151,17 @@ public class RecipeControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"));
+    }
+
+    @Test(expected = CategoryNotFoundException.class)
+    public void categoryNotFoundExceptionTest() throws Exception {
+        when(recipeService.findByCategoryName("test")).thenThrow(new CategoryNotFoundException());
+
+        recipeService.findByCategoryName("test");
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/category"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("error"));
     }
 
     private Recipe recipeBuilder() {

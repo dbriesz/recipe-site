@@ -3,6 +3,7 @@ package com.teamtreehouse.service;
 import com.teamtreehouse.dao.RecipeDao;
 import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Recipe;
+import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,11 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public List<Recipe> findByCategoryName(String categoryName) {
-        return recipeDao.findByCategoryName(categoryName);
+        List<Recipe> recipes = recipeDao.findByCategoryName(categoryName);
+        if (recipes.isEmpty()) {
+            throw new CategoryNotFoundException();
+        } else {
+            return recipes;
+        }
     }
 }

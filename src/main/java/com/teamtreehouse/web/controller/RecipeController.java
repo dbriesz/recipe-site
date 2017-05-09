@@ -9,9 +9,11 @@ import com.teamtreehouse.service.IngredientService;
 import com.teamtreehouse.service.InstructionService;
 import com.teamtreehouse.service.RecipeService;
 import com.teamtreehouse.web.FlashMessage;
+import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -189,5 +191,12 @@ public class RecipeController {
         FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
         flashMap.put("flash", new FlashMessage(ex.getMessage(), FAILURE));
         return "redirect:" + request.getHeader("referer");
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String notFound(Model model, Exception ex) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error";
     }
 }
