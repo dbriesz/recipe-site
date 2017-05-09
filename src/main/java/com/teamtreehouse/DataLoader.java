@@ -1,9 +1,6 @@
 package com.teamtreehouse;
 
-import com.teamtreehouse.domain.Category;
-import com.teamtreehouse.domain.Ingredient;
-import com.teamtreehouse.domain.Instruction;
-import com.teamtreehouse.domain.Recipe;
+import com.teamtreehouse.domain.*;
 import com.teamtreehouse.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -96,5 +93,10 @@ public class DataLoader implements ApplicationRunner {
             value = !value;
             recipeService.save(recipe);
         }
+
+        Role role1 = new Role("ROLE_USER");
+        Role role2 = new Role("ROLE_ADMIN");
+        User user1 = new User("user1", "password", true, role2);
+        User user2 = new User("user2", "password", true, role1);
     }
 }

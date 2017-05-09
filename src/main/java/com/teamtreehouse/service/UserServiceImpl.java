@@ -3,9 +3,9 @@ package com.teamtreehouse.service;
 import com.teamtreehouse.dao.UserDao;
 import com.teamtreehouse.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -13,22 +13,19 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
-    public List<User> findAll() {
-        return (List<User>) userDao.findAll();
+    public User findByUsername(String username) {
+        return userDao.findByUsername(username);
     }
 
     @Override
-    public User findById(Long id) {
-        return userDao.findOne(id);
-    }
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Load user from database (throw exception if not found)
+        User user = userDao.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
 
-    @Override
-    public void save(User user) {
-        userDao.save(user);
-    }
-
-    @Override
-    public void delete(User user) {
-        userDao.delete(user);
+        // Return user object
+        return user;
     }
 }

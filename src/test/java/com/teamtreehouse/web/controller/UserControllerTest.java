@@ -46,7 +46,7 @@ public class UserControllerTest {
     public void getUserProfileTest() throws Exception {
         User user = userBuilder();
 
-        when(userService.findById(1L)).thenReturn(user);
+        when(userService.findByUsername("user1")).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
                 .andExpect(status().isOk())
@@ -83,10 +83,8 @@ public class UserControllerTest {
     }
 
     private User userBuilder() {
-        User user = new User();
+        User user = new User("");
         user.setId(1L);
-        user.setUsername("TestUsername");
-        user.setPassword("TestPassword");
         return user;
     }
 }
