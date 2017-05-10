@@ -36,13 +36,11 @@ public class RecipeController {
     private IngredientService ingredientService;
     @Autowired
     private InstructionService instructionService;
-    @Autowired
-    private UserService userService;
 
     // Home page - index of all recipes
     @SuppressWarnings("unchecked")
     @RequestMapping("/")
-    public String listRecipes(@PathVariable String username, Model model) {
+    public String listRecipes(Model model) {
         List<Recipe> recipes = recipeService.findAll();
         List<Category> categories = categoryService.findAll();
 

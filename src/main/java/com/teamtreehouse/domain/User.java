@@ -20,7 +20,7 @@ public class User implements UserDetails {
     private String password;
     @Column(nullable = false)
     private boolean enabled;
-    private String[] roles = {"ROLE_USER", "ROLE_ADMIN"};
+    private String[] roles;
     @OneToMany
     private List<Recipe> favorites = new ArrayList<>();
 

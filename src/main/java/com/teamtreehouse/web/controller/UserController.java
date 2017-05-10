@@ -37,9 +37,6 @@ public class UserController {
         return "access_denied";
     }
 
-
-
-
     // User profile page
     @RequestMapping("users/{username}")
     public String userProfile(@PathVariable String username, Model model) {
@@ -89,4 +86,6 @@ public class UserController {
         // Redirect browser to home page
         return "redirect:/";
     }
+
+
 }

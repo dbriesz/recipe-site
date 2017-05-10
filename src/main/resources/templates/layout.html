@@ -14,9 +14,9 @@
 
 <div>
     <nav th:fragment="nav">
-        <form th:action="@{/login}" th:object="${user}" th:text="*{username}" method="post"><button>Username</button></form>
+        <form th:action="@{/login}" th:text="${user.username}" style="display: inline"><button>Username</button></form>
         &bull;
-        <form th:action="@{/logout}" method="post"><button>logout</button></form>
+        <form th:action="@{/logout}" method="post" style="display: inline"><button>logout</button></form>
     </nav>
 </div>
 
