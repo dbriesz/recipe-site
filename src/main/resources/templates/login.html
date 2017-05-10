@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout :: head('')"></head>
+<head th:replace="layout :: head('Login')"></head>
 <body>
-<div th:replace="layout :: nav"></div>
+
+<nav>
+  <form th:action="@{/users/add}" style="display: inline"><button>sign-up</button></form>
+  &bull;
+  <form th:action="@{/login}" style="display: inline"><button>login</button></form>
+</nav>
 
   <div class="grid-container">
 

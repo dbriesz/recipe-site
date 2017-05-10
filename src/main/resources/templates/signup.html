@@ -1,40 +1,19 @@
-<!doctype html>
-<html lang="en">
-<head>
-
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-
-  <title>Sign-up | My Recipes</title>
-
-  <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'>
-  <link rel="stylesheet" href="css/unsemantic-grid-responsive.css">
-  <link rel="stylesheet" href="css/styles.css">
-
-</head>
-
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head('Sign-Up')"></head>
 <body>
 
-  <nav>
-    <a href="signup.html">
-      sign-up
-    </a>
-    &bull;
-    <a href="login.html">
-      login
-    </a>
-  </nav>
+<nav>
+  <form th:action="@{/users/add}" style="display: inline"><button>sign-up</button></form>
+  &bull;
+  <form th:action="@{/login}" style="display: inline"><button>login</button></form>
+</nav>
 
   <div class="grid-container">
 
     <div class="grid-100">
-      <a href="index.html">
-        <h1>
-          <img src="images/chefbot.svg" height="60px">
-          <br>
-          My Recipes
-        </h1>
-      </a>
+      <div th:replace="layout :: header"></div>
+      <div th:replace="layout :: flash"></div>
     </div>
 
     <div class="grid-100">

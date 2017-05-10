@@ -20,20 +20,18 @@ public class User implements UserDetails {
     private String password;
     @Column(nullable = false)
     private boolean enabled;
-    @OneToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    private String[] roles = {"ROLE_USER", "ROLE_ADMIN"};
     @OneToMany
     private List<Recipe> favorites = new ArrayList<>();
 
     public User() {
     }
 
-    public User(String username, String password, boolean enabled, Role role) {
+    public User(String username, String password, boolean enabled, String[] roles) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
-        this.role = role;
+        this.roles = roles;
     }
 
     public void addFavorite(Recipe recipe) {
@@ -76,7 +74,8 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role.getName()));
+        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         return authorities;
     }
 

@@ -1,13 +1,7 @@
 package com.teamtreehouse.web.controller;
 
-import com.teamtreehouse.domain.Category;
-import com.teamtreehouse.domain.Ingredient;
-import com.teamtreehouse.domain.Instruction;
-import com.teamtreehouse.domain.Recipe;
-import com.teamtreehouse.service.CategoryService;
-import com.teamtreehouse.service.IngredientService;
-import com.teamtreehouse.service.InstructionService;
-import com.teamtreehouse.service.RecipeService;
+import com.teamtreehouse.domain.*;
+import com.teamtreehouse.service.*;
 import com.teamtreehouse.web.FlashMessage;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import org.slf4j.Logger;
@@ -42,17 +36,24 @@ public class RecipeController {
     private IngredientService ingredientService;
     @Autowired
     private InstructionService instructionService;
+    @Autowired
+    private UserService userService;
 
     // Home page - index of all recipes
     @SuppressWarnings("unchecked")
     @RequestMapping("/")
-    public String listRecipes(Model model) {
+    public String listRecipes(@PathVariable String username, Model model) {
         List<Recipe> recipes = recipeService.findAll();
         List<Category> categories = categoryService.findAll();
 
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/recipes/add");
         model.addAttribute("categories", categories);
+        if (username != null) {
+            User user = userService.findByUsername(username);
+            model.addAttribute("user", user);
+            model.addAttribute("username", user.getUsername());
+        }
 
         return "index";
     }
@@ -87,7 +88,7 @@ public class RecipeController {
 
     // Form for adding a new recipe
     @RequestMapping("recipes/add")
-    public String formNewRecipe(Model model) {
+    public String formNewRecipe(Model model, HttpServletRequest request) {
         // Add model attributes needed for new form
         if (!model.containsAttribute("recipe")) {
             model.addAttribute("recipe", new Recipe());
@@ -100,13 +101,14 @@ public class RecipeController {
         List<Instruction> instructions = new ArrayList<>();
         model.addAttribute("ingredients", ingredients);
         model.addAttribute("instructions", instructions);
+        model.addAttribute("cancel-redirect", String.format("redirect:%s", request.getHeader("referer")));
 
         return "edit";
     }
 
     // Edit an existing recipe
     @RequestMapping("recipes/{recipeId}/edit")
-    public String editRecipe(@PathVariable Long recipeId, Model model) {
+    public String editRecipe(@PathVariable Long recipeId, Model model, HttpServletRequest request) {
         // Add model attributes needed for edit form
         Recipe recipe = recipeService.findById(recipeId);
         if (!model.containsAttribute("recipe")) {
@@ -118,6 +120,7 @@ public class RecipeController {
         model.addAttribute("categories", categories);
         model.addAttribute("ingredients", ingredientService.findAll());
         model.addAttribute("instructions", instructionService.findAll());
+        model.addAttribute("cancel-redirect", String.format("redirect:%s", request.getHeader("referer")));
 
         return "edit";
     }

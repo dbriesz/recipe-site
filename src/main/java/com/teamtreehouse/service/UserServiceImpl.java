@@ -18,6 +18,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void save(User user) {
+        userDao.save(user);
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // Load user from database (throw exception if not found)
         User user = userDao.findByUsername(username);
@@ -28,4 +33,6 @@ public class UserServiceImpl implements UserService {
         // Return user object
         return user;
     }
+
+
 }

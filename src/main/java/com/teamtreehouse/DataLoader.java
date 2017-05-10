@@ -93,10 +93,11 @@ public class DataLoader implements ApplicationRunner {
             value = !value;
             recipeService.save(recipe);
         }
-
-        Role role1 = new Role("ROLE_USER");
-        Role role2 = new Role("ROLE_ADMIN");
-        User user1 = new User("user1", "password", true, role2);
-        User user2 = new User("user2", "password", true, role1);
+        String[] roles1 = {"ROLE_USER", "ROLE_ADMIN"};
+        String[] roles2 = {"ROLE_USER"};
+        User user1 = new User("user1", "password", true, roles1);
+        User user2 = new User("user2", "password", true, roles2);
+        userService.save(user1);
+        userService.save(user2);
     }
 }

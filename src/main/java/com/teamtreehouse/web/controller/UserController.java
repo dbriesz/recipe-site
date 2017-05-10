@@ -41,13 +41,13 @@ public class UserController {
 
 
     // User profile page
-    @SuppressWarnings("unchecked")
-    @RequestMapping("users/{userId}")
+    @RequestMapping("users/{username}")
     public String userProfile(@PathVariable String username, Model model) {
         // Get the user given by username
         User user = userService.findByUsername(username);
 
         model.addAttribute("user", user);
+        model.addAttribute("username", user.getUsername());
 
         return "profile";
     }
@@ -76,7 +76,7 @@ public class UserController {
         return "login";
     }
 
-/*    // Add a new user
+    // Add a new user
     @RequestMapping(value = "users/add", method = RequestMethod.POST)
     public String addUser(@Valid User user, BindingResult result) {
         // Add user if valid data was received
@@ -88,6 +88,5 @@ public class UserController {
 
         // Redirect browser to home page
         return "redirect:/";
-    }*/
-
+    }
 }

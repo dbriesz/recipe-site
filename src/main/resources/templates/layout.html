@@ -14,11 +14,11 @@
 
 <div>
     <nav th:fragment="nav">
-        <a href="profile.html">
-            Chandra S.
+        <a th:href="@{/users/${user.username}}">
+            Username
         </a>
         &bull;
-        <a href="login.html">
+        <a th:href="@{/login}">
             logout
         </a>
     </nav>
