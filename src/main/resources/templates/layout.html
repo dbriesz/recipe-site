@@ -14,13 +14,9 @@
 
 <div>
     <nav th:fragment="nav">
-        <a th:href="@{/users/${user.username}}">
-            Username
-        </a>
+        <form th:action="@{/login}" th:object="${user}" th:text="*{username}" method="post"><button>Username</button></form>
         &bull;
-        <a th:href="@{/login}">
-            logout
-        </a>
+        <form th:action="@{/logout}" method="post"><button>logout</button></form>
     </nav>
 </div>
 

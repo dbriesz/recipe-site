@@ -49,11 +49,6 @@ public class RecipeController {
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/recipes/add");
         model.addAttribute("categories", categories);
-        if (username != null) {
-            User user = userService.findByUsername(username);
-            model.addAttribute("user", user);
-            model.addAttribute("username", user.getUsername());
-        }
 
         return "index";
     }
