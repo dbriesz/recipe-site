@@ -203,7 +203,7 @@ public class RecipeController {
 
     // Mark/unmark an existing recipe as a favorite
     @RequestMapping(value = "recipes/{recipeId}/favorite", method = RequestMethod.POST)
-    public String addFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal) {
+    public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal) {
         Recipe recipe = recipeService.findById(recipeId);
         User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         user.addFavorite(recipe);
