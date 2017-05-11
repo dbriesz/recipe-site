@@ -33,7 +33,11 @@
         </div> <div class="clear"></div>
 
         <div th:each="recipe : ${recipes}" class="grid-100 row addHover">
-          <div><img th:src="${recipe.isFavorite()} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="12px"/> </div>
+          <form th:action="@{|/recipes/${recipe.id}/favorite|}" method="post">
+            <button style="display: inline; background: transparent; color: #808080; margin-right: 5px" type="submit">
+              <img th:src="${recipe.isFavorite()} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="12px"/>
+            </button>
+          </form>
           <a th:href="@{|/recipes/${recipe.id}/|}">
             <div class="grid-70">
               <p style="display: inline; margin-left: 5%" th:text="${recipe.name}">

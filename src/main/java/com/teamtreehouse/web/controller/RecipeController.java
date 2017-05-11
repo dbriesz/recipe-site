@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class RecipeController {
     private IngredientService ingredientService;
     @Autowired
     private InstructionService instructionService;
+    @Autowired
+    private UserService userService;
 
     // Home page - index of all recipes
     @SuppressWarnings("unchecked")
@@ -139,13 +143,16 @@ public class RecipeController {
 
     // Add a recipe
     @RequestMapping(value = "recipes/add", method = RequestMethod.POST)
-    public String addRecipe(@Valid Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String addRecipe(@Valid Recipe recipe, BindingResult result,
+                            Principal principal, RedirectAttributes redirectAttributes) {
         // Add recipe if valid data was received
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("Invalid input. Ingredient quantity must be a number. Please try again.", FlashMessage.Status.FAILURE));
             return "redirect:/recipes/add";
         } else {
+            User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+            recipe.setUser(user);
             recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
             recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
             recipeService.save(recipe);
