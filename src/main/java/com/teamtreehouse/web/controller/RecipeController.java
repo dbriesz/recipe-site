@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,8 +48,22 @@ public class RecipeController {
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/recipes/add");
         model.addAttribute("categories", categories);
+        getCurrentLoggedInUser(model);
 
         return "index";
+    }
+
+    private void getCurrentLoggedInUser(Model model) {
+        User user = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal != null) {
+            user = (User) principal;
+        }
+
+        if (user != null) {
+            String name = user.getUsername(); //get logged in username
+            model.addAttribute("username", name);
+        }
     }
 
     // List of recipes based on selected category
@@ -64,6 +79,7 @@ public class RecipeController {
         model.addAttribute("categories", categories);
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/category");
+        getCurrentLoggedInUser(model);
 
         return "index";
     }
@@ -75,6 +91,7 @@ public class RecipeController {
         Recipe recipe = recipeService.findById(recipeId);
 
         model.addAttribute("recipe", recipe);
+        getCurrentLoggedInUser(model);
 
         return "detail";
     }
@@ -94,7 +111,8 @@ public class RecipeController {
         List<Instruction> instructions = new ArrayList<>();
         model.addAttribute("ingredients", ingredients);
         model.addAttribute("instructions", instructions);
-        model.addAttribute("cancel-redirect", String.format("redirect:%s", request.getHeader("referer")));
+        model.addAttribute("cancelRedirect", String.format("%s", request.getHeader("referer")));
+        getCurrentLoggedInUser(model);
 
         return "edit";
     }
@@ -113,7 +131,8 @@ public class RecipeController {
         model.addAttribute("categories", categories);
         model.addAttribute("ingredients", ingredientService.findAll());
         model.addAttribute("instructions", instructionService.findAll());
-        model.addAttribute("cancel-redirect", String.format("redirect:%s", request.getHeader("referer")));
+        model.addAttribute("cancelRedirect", String.format("%s", request.getHeader("referer")));
+        getCurrentLoggedInUser(model);
 
         return "edit";
     }

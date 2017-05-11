@@ -3,11 +3,13 @@
 <head th:replace="layout :: head('Login')"></head>
 <body>
 
-<nav>
-  <form th:action="@{/users/add}" th:object="${user}" style="display: inline"><button>sign-up</button></form>
-  &bull;
-  <form th:action="@{/login}" th:object="${user}" style="display: inline"><button>login</button></form>
-</nav>
+<div>
+  <nav>
+    <button style="background: transparent; color: #808080"><a th:href="@{/signup}" style="display: inline">sign-up</a></button>
+    &bull;
+    <form th:action="@{/login}" th:object="${user}" style="display: inline"><button style="background: transparent; color: #808080">login</button></form>
+  </nav>
+</div>
 
   <div class="grid-container">
 
@@ -18,21 +20,20 @@
 
     <div class="grid-100">
       <div class="recipes">
-        <form th:action="@{/login}" th:object="${user}" method="post" class="login">
-          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <form th:action="@{/login}" method="post" class="login">
         <div class="prefix-20 grid-60 suffix-20">
           <p>
-            <input th:field="*{username}" placeholder="username"/>
+            <label> User Name <input type="text" name="username" placeholder="username"/> </label>
           </p>
         </div> <div class="clear"></div>
         <div class="prefix-20 grid-60 suffix-20">
           <p>
-            <input type="password" th:field="*{password}" placeholder="password"/>
+            <label> Password <input type="password" name="password" placeholder="password"/> </label>
           </p>
         </div> <div class="clear"></div>
         <div class="prefix-20 grid-60 suffix-20">
           <p>
-            <button type="submit">Login</button>
+            <button type="submit" value="Sign In">Login</button>
           </p>
         </div> <div class="clear"></div>
         </form>

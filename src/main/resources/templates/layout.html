@@ -14,9 +14,9 @@
 
 <div>
     <nav th:fragment="nav">
-        <form th:action="@{/login}" th:text="${user.username}" style="display: inline"><button>Username</button></form>
+        <button style="background: transparent; color: #808080"><a th:href="@{/profile}" th:text="${username}" style="display: inline">Username</a></button>
         &bull;
-        <form th:action="@{/logout}" method="post" style="display: inline"><button>logout</button></form>
+        <form th:action="@{/logout}" method="post" style="display: inline"><button style="background: transparent; color: #808080">logout</button></form>
     </nav>
 </div>
 

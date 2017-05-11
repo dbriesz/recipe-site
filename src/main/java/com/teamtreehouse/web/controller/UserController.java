@@ -3,6 +3,7 @@ package com.teamtreehouse.web.controller;
 import com.teamtreehouse.domain.User;
 import com.teamtreehouse.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,40 +38,42 @@ public class UserController {
         return "access_denied";
     }
 
+    private void getCurrentLoggedInUser(Model model) {
+        User user = null;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal != null) {
+            user = (User) principal;
+        }
+
+        if (user != null) {
+            String name = user.getUsername(); //get logged in username
+            model.addAttribute("username", name);
+        }
+    }
+
+    // User signup page
+    @RequestMapping("/signup")
+    public String formNewUser(Model model) {
+        // Add model attributes needed for new form
+        if (!model.containsAttribute("user")) {
+            model.addAttribute("user", new User());
+        }
+
+        return "signup";
+    }
+
     // User profile page
-    @RequestMapping("users/{username}")
+    @RequestMapping("/profile")
     public String userProfile(@PathVariable String username, Model model) {
         // Get the user given by username
         User user = userService.findByUsername(username);
 
         model.addAttribute("user", user);
         model.addAttribute("username", user.getUsername());
+        model.addAttribute("action", String.format("users/%s", user.getUsername()));
+        getCurrentLoggedInUser(model);
 
         return "profile";
-    }
-
-    // User signup page
-    @RequestMapping("users/add")
-    public String formNewUser(Model model) {
-        // Add model attributes needed for new form
-        if (!model.containsAttribute("user")) {
-            model.addAttribute("user", new User());
-        }
-        model.addAttribute("action", "users/add");
-
-        return "signup";
-    }
-
-    // User login page
-    @RequestMapping("users/{userId}/login")
-    public String login(@PathVariable String username, Model model) {
-        User user = userService.findByUsername(username);
-        if (!model.containsAttribute("user")) {
-            model.addAttribute("user", user);
-        }
-        model.addAttribute("action", String.format("/users/%s/login", username));
-
-        return "login";
     }
 
     // Add a new user
@@ -86,6 +89,4 @@ public class UserController {
         // Redirect browser to home page
         return "redirect:/";
     }
-
-
 }
