@@ -207,8 +207,13 @@ public class RecipeController {
     public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal) {
         Recipe recipe = recipeService.findById(recipeId);
         User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        user.addFavorite(recipe);
-        userService.save(user);
+        if (!user.getFavorites().contains(recipe)) {
+            user.addFavorite(recipe);
+            userService.save(user);
+        } else {
+            user.removeFavorite(recipe);
+            userService.save(user);
+        }
 
         return String.format("redirect:%s", request.getHeader("referer"));
     }

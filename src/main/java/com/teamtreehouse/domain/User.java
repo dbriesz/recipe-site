@@ -39,6 +39,11 @@ public class User implements UserDetails {
         favorites.add(recipe);
     }
 
+    public void removeFavorite(Recipe recipe) {
+        recipe.setUser(this);
+        favorites.remove(recipe);
+    }
+
     public List<Recipe> getFavorites() {
         return favorites;
     }
