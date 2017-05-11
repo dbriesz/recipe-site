@@ -33,6 +33,15 @@ public class DataLoader implements ApplicationRunner {
         List<Ingredient> ingredients = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
 
+        String[] roles1 = {"ROLE_USER", "ROLE_ADMIN"};
+        String[] roles2 = {"ROLE_USER"};
+        User user1 = new User("user1", "password", true, roles1);
+        User user2 = new User("user2", "password", true, roles2);
+        user1.setId(1L);
+        user2.setId(2L);
+        userService.save(user1);
+        userService.save(user2);
+
         for (int i = 1; i <= 5; i++) {
             Category category = new Category();
             category.setName("Category " + i);
@@ -91,13 +100,70 @@ public class DataLoader implements ApplicationRunner {
             recipe.setCookTime(i + 1 + " hours");
             recipe.setFavorite(value);
             value = !value;
+            recipe.setUser(user1);
             recipeService.save(recipe);
         }
-        String[] roles1 = {"ROLE_USER", "ROLE_ADMIN"};
-        String[] roles2 = {"ROLE_USER"};
-        User user1 = new User("user1", "password", true, roles1);
-        User user2 = new User("user2", "password", true, roles2);
-        userService.save(user1);
-        userService.save(user2);
+
+        for (int i = 5; i <= 10; i++) {
+            Category category = new Category();
+            category.setName("Category " + i);
+            categoryService.save(category);
+
+            Recipe recipe = new Recipe();
+            recipe.setCategory(category);
+            Ingredient ingredient = new Ingredient();
+            Ingredient ingredient2 = new Ingredient();
+
+            ingredient.setRecipe(recipeService.findById((long) i));
+            ingredient2.setRecipe(recipeService.findById((long) i));
+
+            ingredient.setMeasurement("TestMeasurement " + i);
+            ingredient2.setMeasurement("TestMeasurement " + i);
+
+            ingredient.setName("TestIngredient " + i);
+            ingredient2.setName("AnotherTestIngredient " + i);
+
+            ingredient.setQuantity(i);
+            ingredient2.setQuantity(i);
+
+            ingredientService.save(ingredient);
+            ingredientService.save(ingredient2);
+
+            ingredients.add(ingredient);
+            ingredients.add(ingredient2);
+
+            recipe.addIngredient(ingredient);
+            recipe.addIngredient(ingredient2);
+
+            Instruction instruction = new Instruction();
+            Instruction instruction2 = new Instruction();
+
+            instruction.setRecipe(recipeService.findById((long) i));
+            instruction2.setRecipe(recipeService.findById((long) i));
+
+            instruction.setDescription("TestDescription " + i);
+            instruction2.setDescription("AnotherTestDescription " + i);
+
+            instructionService.save(instruction);
+            instructionService.save(instruction2);
+
+            instructions.add(instruction);
+            instructions.add(instruction2);
+
+            recipe.addInstruction(instruction);
+            recipe.addInstruction(instruction2);
+
+            recipe.setName("TestRecipe " + i);
+            recipe.setDescription("TestDesc " + i);
+
+            recipe.setImageUrl("TestUrl" + i);
+
+            recipe.setPrepTime(i + 1 + " minutes");
+            recipe.setCookTime(i + 1 + " hours");
+            recipe.setFavorite(value);
+            value = !value;
+            recipe.setUser(user2);
+            recipeService.save(recipe);
+        }
     }
 }

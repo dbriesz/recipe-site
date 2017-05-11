@@ -22,6 +22,7 @@ public class Recipe {
     private String cookTime;
     private boolean favorite;
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     public Recipe() {
@@ -29,7 +30,7 @@ public class Recipe {
 
     public Recipe(String name, String description, Category category,
                   String imageUrl, List<Ingredient> ingredients, List<Instruction> instructions,
-                  String prepTime, String cookTime, boolean favorite) {
+                  String prepTime, String cookTime, boolean favorite, User user) {
         this.name = name;
         this.description = description;
         this.category = category;
@@ -39,6 +40,7 @@ public class Recipe {
         this.prepTime = prepTime;
         this.cookTime = cookTime;
         this.favorite = favorite;
+        this.user = user;
     }
 
     public void addIngredient(Ingredient ingredient) {
@@ -58,14 +60,6 @@ public class Recipe {
     public List<Instruction> getInstructions() {
         return instructions;
     }
-
-/*    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public void setInstructions(List<Instruction> instructions) {
-        this.instructions = instructions;
-    }*/
 
     public Long getId() {
         return id;

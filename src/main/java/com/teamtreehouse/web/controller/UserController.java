@@ -1,6 +1,8 @@
 package com.teamtreehouse.web.controller;
 
+import com.teamtreehouse.domain.Recipe;
 import com.teamtreehouse.domain.User;
+import com.teamtreehouse.service.RecipeService;
 import com.teamtreehouse.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,11 +15,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private RecipeService recipeService;
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String loginForm(Model model, HttpServletRequest request) {
@@ -64,14 +71,12 @@ public class UserController {
 
     // User profile page
     @RequestMapping("/profile")
-    public String userProfile(@PathVariable String username, Model model) {
+    public String userProfile(Model model, Principal principal) {
         // Get the user given by username
-        User user = userService.findByUsername(username);
-
-        model.addAttribute("user", user);
-        model.addAttribute("username", user.getUsername());
-        model.addAttribute("action", String.format("users/%s", user.getUsername()));
         getCurrentLoggedInUser(model);
+        model.addAttribute("username", principal.getName());
+        List<Recipe> recipes = recipeService.findAll();
+        model.addAttribute("recipes", recipes);
 
         return "profile";
     }

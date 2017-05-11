@@ -45,7 +45,7 @@
               <div>
                   <a th:href="@{|/recipes/${recipe.id}/edit|}"> <img th:src="@{/assets/images/edit.svg}" height="12px"/> Edit </a>
                 <form style="display: inline" th:action="@{|/recipes/${recipe.id}/delete|}" method="post">
-                  <button style="background: transparent; color: #808080; margin-left: 0px" type="submit">
+                  <button style="background: transparent; color: #808080; margin-left: 0" type="submit">
                   <img th:src="@{/assets/images/delete.svg}" height="12px"/> Delete </button>
                 </form>
               </div>

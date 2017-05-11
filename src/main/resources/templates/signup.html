@@ -3,11 +3,13 @@
 <head th:replace="layout :: head('Sign-Up')"></head>
 <body>
 
-<nav>
-  <form th:action="@{/users/add}" style="display: inline"><button>sign-up</button></form>
-  &bull;
-  <form th:action="@{/login}" style="display: inline"><button>login</button></form>
-</nav>
+<div>
+  <nav>
+    <button style="background: transparent; color: #808080"><a th:href="@{/signup}" style="display: inline">sign-up</a></button>
+    &bull;
+    <form th:action="@{/login}" th:object="${user}" style="display: inline"><button style="background: transparent; color: #808080">login</button></form>
+  </nav>
+</div>
 
   <div class="grid-container">
 
