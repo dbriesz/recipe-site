@@ -53,7 +53,7 @@ public class RecipeController {
         model.addAttribute("action", "/recipes/add");
         model.addAttribute("categories", categories);
         getCurrentLoggedInUser(model);
-        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
+//        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
         return "index";
     }
@@ -68,6 +68,7 @@ public class RecipeController {
         if (user != null) {
             String name = user.getUsername(); //get logged in username
             model.addAttribute("username", name);
+            model.addAttribute("currentUser", user);
         }
     }
 
@@ -81,7 +82,7 @@ public class RecipeController {
         } else {
             recipes = recipeService.findByCategoryName(category);
         }
-        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
+//        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
         model.addAttribute("categories", categories);
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/category");
@@ -98,7 +99,7 @@ public class RecipeController {
 
         model.addAttribute("recipe", recipe);
         getCurrentLoggedInUser(model);
-        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
+//        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
         return "detail";
     }

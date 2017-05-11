@@ -56,6 +56,7 @@ public class UserController {
         if (user != null) {
             String name = user.getUsername(); //get logged in username
             model.addAttribute("username", name);
+            model.addAttribute("currentUser", user);
         }
     }
 
@@ -78,7 +79,7 @@ public class UserController {
         model.addAttribute("username", principal.getName());
         List<Recipe> recipes = recipeService.findAll();
         model.addAttribute("recipes", recipes);
-        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
+//        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
         return "profile";
     }
