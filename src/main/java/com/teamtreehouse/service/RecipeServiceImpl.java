@@ -35,12 +35,6 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void toggleFavorite(Recipe recipe) {
-        recipe.setFavorite(!recipe.isFavorite());
-        recipeDao.save(recipe);
-    }
-
-    @Override
     public List<Recipe> findByCategoryName(String categoryName) {
         List<Recipe> recipes = recipeDao.findByCategoryName(categoryName);
         if (recipes.isEmpty()) {

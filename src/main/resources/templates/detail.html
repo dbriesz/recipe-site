@@ -20,7 +20,7 @@
             <h2 class="flush-right">
               <form th:action="@{|/recipes/${recipe.id}/favorite|}" method="post">
                 <button style="display: inline; background: transparent; color: #808080; margin-right: 20px" type="submit">
-                  <img th:src="${recipe.isFavorite()} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="16px"/>
+                  <img th:src="${recipe.isFavorited(currentUser)} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="16px"/>
                 </button>
               </form>
               <button style="display: inline; background: none" type="submit"><a th:href="@{/recipes/add}">+ Add Recipe</a></button>

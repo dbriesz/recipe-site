@@ -5,6 +5,7 @@ import com.teamtreehouse.domain.User;
 import com.teamtreehouse.service.RecipeService;
 import com.teamtreehouse.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,6 +78,7 @@ public class UserController {
         model.addAttribute("username", principal.getName());
         List<Recipe> recipes = recipeService.findAll();
         model.addAttribute("recipes", recipes);
+        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
         return "profile";
     }

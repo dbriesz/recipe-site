@@ -45,7 +45,7 @@ public class RecipeController {
     // Home page - index of all recipes
     @SuppressWarnings("unchecked")
     @RequestMapping("/")
-    public String listRecipes(Model model) {
+    public String listRecipes(Model model, Principal principal) {
         List<Recipe> recipes = recipeService.findAll();
         List<Category> categories = categoryService.findAll();
 
@@ -53,6 +53,7 @@ public class RecipeController {
         model.addAttribute("action", "/recipes/add");
         model.addAttribute("categories", categories);
         getCurrentLoggedInUser(model);
+        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
         return "index";
     }
@@ -80,13 +81,7 @@ public class RecipeController {
         } else {
             recipes = recipeService.findByCategoryName(category);
         }
-
-/*        recipes.forEach(recipe -> {
-            if (((UsernamePasswordAuthenticationToken) principal).getPrincipal() != recipe.getUser()) {
-                recipeService.toggleFavorite(recipe);
-            }
-        });*/
-
+        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
         model.addAttribute("categories", categories);
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/category");
@@ -211,8 +206,8 @@ public class RecipeController {
     public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal) {
         Recipe recipe = recipeService.findById(recipeId);
         User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        recipe.setUser(user);
-        recipeService.toggleFavorite(recipe);
+        user.addFavorite(recipe);
+        userService.save(user);
 
         return String.format("redirect:%s", request.getHeader("referer"));
     }

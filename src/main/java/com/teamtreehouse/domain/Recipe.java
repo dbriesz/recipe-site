@@ -44,12 +44,10 @@ public class Recipe {
     }
 
     public void addIngredient(Ingredient ingredient) {
-        ingredient.setRecipe(this);
         ingredients.add(ingredient);
     }
 
     public void addInstruction(Instruction instruction) {
-        instruction.setRecipe(this);
         instructions.add(instruction);
     }
 
@@ -117,8 +115,8 @@ public class Recipe {
         this.cookTime = cookTime;
     }
 
-    public boolean isFavorite() {
-        return favorite;
+    public boolean isFavorited(User user) {
+        return user.getFavorites().contains(this);
     }
 
     public void setFavorite(boolean favorite) {

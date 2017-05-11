@@ -9,9 +9,6 @@ public class Instruction {
     private Long id;
     private String description;
 
-    @ManyToOne
-    private Recipe recipe;
-
     public Instruction() {
     }
 
@@ -35,14 +32,6 @@ public class Instruction {
         this.description = description;
     }
 
-    public Recipe getRecipe() {
-        return recipe;
-    }
-
-    public void setRecipe(Recipe recipe) {
-        this.recipe = recipe;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,15 +40,13 @@ public class Instruction {
         Instruction that = (Instruction) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        return recipe != null ? recipe.equals(that.recipe) : that.recipe == null;
+        return description != null ? description.equals(that.description) : that.description == null;
     }
 
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (recipe != null ? recipe.hashCode() : 0);
         return result;
     }
 }

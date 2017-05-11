@@ -52,9 +52,6 @@ public class DataLoader implements ApplicationRunner {
             Ingredient ingredient = new Ingredient();
             Ingredient ingredient2 = new Ingredient();
 
-            ingredient.setRecipe(recipeService.findById((long) i));
-            ingredient2.setRecipe(recipeService.findById((long) i));
-
             ingredient.setMeasurement("TestMeasurement " + i);
             ingredient2.setMeasurement("TestMeasurement " + i);
 
@@ -76,9 +73,6 @@ public class DataLoader implements ApplicationRunner {
             Instruction instruction = new Instruction();
             Instruction instruction2 = new Instruction();
 
-            instruction.setRecipe(recipeService.findById((long) i));
-            instruction2.setRecipe(recipeService.findById((long) i));
-
             instruction.setDescription("TestDescription " + i);
             instruction2.setDescription("AnotherTestDescription " + i);
 
@@ -99,8 +93,9 @@ public class DataLoader implements ApplicationRunner {
             recipe.setPrepTime(i + 1 + " minutes");
             recipe.setCookTime(i + 1 + " hours");
             recipe.setFavorite(value);
-            value = !value;
             recipe.setUser(user1);
+            recipe.setFavorite(value);
+            value = !value;
             recipeService.save(recipe);
         }
 
@@ -114,9 +109,6 @@ public class DataLoader implements ApplicationRunner {
             Ingredient ingredient = new Ingredient();
             Ingredient ingredient2 = new Ingredient();
 
-            ingredient.setRecipe(recipeService.findById((long) i));
-            ingredient2.setRecipe(recipeService.findById((long) i));
-
             ingredient.setMeasurement("TestMeasurement " + i);
             ingredient2.setMeasurement("TestMeasurement " + i);
 
@@ -138,9 +130,6 @@ public class DataLoader implements ApplicationRunner {
             Instruction instruction = new Instruction();
             Instruction instruction2 = new Instruction();
 
-            instruction.setRecipe(recipeService.findById((long) i));
-            instruction2.setRecipe(recipeService.findById((long) i));
-
             instruction.setDescription("TestDescription " + i);
             instruction2.setDescription("AnotherTestDescription " + i);
 
@@ -161,8 +150,9 @@ public class DataLoader implements ApplicationRunner {
             recipe.setPrepTime(i + 1 + " minutes");
             recipe.setCookTime(i + 1 + " hours");
             recipe.setFavorite(value);
-            value = !value;
             recipe.setUser(user2);
+            recipe.setFavorite(value);
+            value = !value;
             recipeService.save(recipe);
         }
     }
