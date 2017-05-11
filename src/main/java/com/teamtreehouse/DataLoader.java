@@ -152,7 +152,7 @@ public class DataLoader implements ApplicationRunner {
             recipe.setCookTime(i + 1 + " hours");
 
             recipe.setUser(user2);
-            if (count %2 == 0) {
+            if (num %2 == 0) {
                 user2.addFavorite(recipe);
             }
             num++;
