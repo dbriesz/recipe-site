@@ -18,9 +18,11 @@
           </div>
           <div class="grid-50">
             <h2 class="flush-right">
-              <a style="margin-right: 20px" href="#">
-                <img th:src="${recipe.isFavorite()} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="16px"/>
-              </a>
+              <form th:action="@{|/recipes/${recipe.id}/favorite|}" method="post">
+                <button style="display: inline; background: transparent; color: #808080; margin-right: 20px" type="submit">
+                  <img th:src="${recipe.isFavorite()} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="16px"/>
+                </button>
+              </form>
               <button style="display: inline; background: none" type="submit"><a th:href="@{/recipes/add}">+ Add Recipe</a></button>
               <button style="display: inline; background: none" type="submit"><a th:href="@{|/recipes/${recipe.id}/edit|}">Edit Recipe</a></button>
             </h2>

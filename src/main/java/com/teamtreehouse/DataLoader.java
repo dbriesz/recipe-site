@@ -104,7 +104,7 @@ public class DataLoader implements ApplicationRunner {
             recipeService.save(recipe);
         }
 
-        for (int i = 5; i <= 10; i++) {
+        for (int i = 6; i <= 10; i++) {
             Category category = new Category();
             category.setName("Category " + i);
             categoryService.save(category);

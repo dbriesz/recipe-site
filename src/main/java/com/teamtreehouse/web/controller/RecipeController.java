@@ -72,7 +72,7 @@ public class RecipeController {
 
     // List of recipes based on selected category
     @RequestMapping("/category")
-    public String category(@RequestParam String category, Model model) {
+    public String category(@RequestParam String category, Model model, Principal principal) {
         List<Category> categories = categoryService.findAll();
         List<Recipe> recipes;
         if (category.equals("")) {
@@ -80,6 +80,13 @@ public class RecipeController {
         } else {
             recipes = recipeService.findByCategoryName(category);
         }
+
+/*        recipes.forEach(recipe -> {
+            if (((UsernamePasswordAuthenticationToken) principal).getPrincipal() != recipe.getUser()) {
+                recipeService.toggleFavorite(recipe);
+            }
+        });*/
+
         model.addAttribute("categories", categories);
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/category");
@@ -201,8 +208,10 @@ public class RecipeController {
 
     // Mark/unmark an existing recipe as a favorite
     @RequestMapping(value = "recipes/{recipeId}/favorite", method = RequestMethod.POST)
-    public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request) {
+    public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal) {
         Recipe recipe = recipeService.findById(recipeId);
+        User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        recipe.setUser(user);
         recipeService.toggleFavorite(recipe);
 
         return String.format("redirect:%s", request.getHeader("referer"));
