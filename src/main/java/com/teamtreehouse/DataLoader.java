@@ -8,7 +8,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -29,10 +28,9 @@ public class DataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
 
-        boolean value = false;
         List<Ingredient> ingredients = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
-
+        int count = 1;
         String[] roles1 = {"ROLE_USER", "ROLE_ADMIN"};
         String[] roles2 = {"ROLE_USER"};
         User user1 = new User("user1", "password", true, roles1);
@@ -94,10 +92,14 @@ public class DataLoader implements ApplicationRunner {
             recipe.setCookTime(i + 1 + " hours");
 
             recipe.setUser(user1);
-
+            if (count %2 == 0) {
+                user1.addFavorite(recipe);
+            }
+            count++;
             recipeService.save(recipe);
         }
 
+        int num = 1;
         for (int i = 6; i <= 10; i++) {
             Category category = new Category();
             category.setName("Category " + i);
@@ -150,7 +152,10 @@ public class DataLoader implements ApplicationRunner {
             recipe.setCookTime(i + 1 + " hours");
 
             recipe.setUser(user2);
-
+            if (count %2 == 0) {
+                user2.addFavorite(recipe);
+            }
+            num++;
             recipeService.save(recipe);
         }
     }

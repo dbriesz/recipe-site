@@ -92,12 +92,13 @@ public class RecipeController {
 
     // Single recipe page
     @RequestMapping("recipes/{recipeId}")
-    public String recipe(@PathVariable Long recipeId, Model model) {
+    public String recipe(@PathVariable Long recipeId, Model model, Principal principal) {
         // Get the recipe given by recipeId
         Recipe recipe = recipeService.findById(recipeId);
 
         model.addAttribute("recipe", recipe);
         getCurrentLoggedInUser(model);
+        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
         return "detail";
     }
