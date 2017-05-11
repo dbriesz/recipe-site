@@ -92,10 +92,9 @@ public class DataLoader implements ApplicationRunner {
 
             recipe.setPrepTime(i + 1 + " minutes");
             recipe.setCookTime(i + 1 + " hours");
-            recipe.setFavorite(value);
+
             recipe.setUser(user1);
-            recipe.setFavorite(value);
-            value = !value;
+
             recipeService.save(recipe);
         }
 
@@ -149,10 +148,9 @@ public class DataLoader implements ApplicationRunner {
 
             recipe.setPrepTime(i + 1 + " minutes");
             recipe.setCookTime(i + 1 + " hours");
-            recipe.setFavorite(value);
+
             recipe.setUser(user2);
-            recipe.setFavorite(value);
-            value = !value;
+
             recipeService.save(recipe);
         }
     }

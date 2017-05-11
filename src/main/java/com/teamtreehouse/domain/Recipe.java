@@ -20,7 +20,6 @@ public class Recipe {
     private List<Instruction> instructions = new ArrayList<>();
     private String prepTime;
     private String cookTime;
-    private boolean favorite;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -30,7 +29,7 @@ public class Recipe {
 
     public Recipe(String name, String description, Category category,
                   String imageUrl, List<Ingredient> ingredients, List<Instruction> instructions,
-                  String prepTime, String cookTime, boolean favorite, User user) {
+                  String prepTime, String cookTime, User user) {
         this.name = name;
         this.description = description;
         this.category = category;
@@ -39,7 +38,6 @@ public class Recipe {
         this.instructions = instructions;
         this.prepTime = prepTime;
         this.cookTime = cookTime;
-        this.favorite = favorite;
         this.user = user;
     }
 
@@ -119,10 +117,6 @@ public class Recipe {
         return user.getFavorites().contains(this);
     }
 
-    public void setFavorite(boolean favorite) {
-        this.favorite = favorite;
-    }
-
     public User getUser() {
         return user;
     }
@@ -138,7 +132,6 @@ public class Recipe {
 
         Recipe recipe = (Recipe) o;
 
-        if (favorite != recipe.favorite) return false;
         if (id != null ? !id.equals(recipe.id) : recipe.id != null) return false;
         if (name != null ? !name.equals(recipe.name) : recipe.name != null) return false;
         if (description != null ? !description.equals(recipe.description) : recipe.description != null) return false;
@@ -163,7 +156,6 @@ public class Recipe {
         result = 31 * result + (instructions != null ? instructions.hashCode() : 0);
         result = 31 * result + (prepTime != null ? prepTime.hashCode() : 0);
         result = 31 * result + (cookTime != null ? cookTime.hashCode() : 0);
-        result = 31 * result + (favorite ? 1 : 0);
         result = 31 * result + (user != null ? user.hashCode() : 0);
         return result;
     }
