@@ -12,6 +12,9 @@ public interface RecipeDao extends PagingAndSortingRepository<Recipe, Long> {
     @RestResource(rel = "recipe-category", path = "categoryName")
     List<Recipe> findByCategoryName(@Param("categoryName") String name);
 
+    @RestResource(rel = "search", path = "search")
+    List<Recipe> findByDescriptionContaining(@Param("search") String searchTerm);
+
     @Query("select r from Recipe r where r.user.id=:#{principal.id}")
     List<Recipe> findAll();
 }

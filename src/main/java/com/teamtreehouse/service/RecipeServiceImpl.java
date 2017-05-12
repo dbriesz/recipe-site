@@ -4,6 +4,7 @@ import com.teamtreehouse.dao.RecipeDao;
 import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Recipe;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
+import com.teamtreehouse.web.exceptions.SearchTermNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -43,4 +44,16 @@ public class RecipeServiceImpl implements RecipeService {
             return recipes;
         }
     }
+
+    @Override
+    public List<Recipe> findByDescriptionContaining(String searchTerm) {
+        List<Recipe> recipes = recipeDao.findByDescriptionContaining(searchTerm);
+        if (recipes.isEmpty()) {
+            throw new SearchTermNotFoundException();
+        } else {
+            return recipes;
+        }
+    }
+
+
 }

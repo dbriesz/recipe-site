@@ -4,6 +4,7 @@ import com.teamtreehouse.domain.*;
 import com.teamtreehouse.service.*;
 import com.teamtreehouse.web.FlashMessage;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
+import com.teamtreehouse.web.exceptions.SearchTermNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +73,7 @@ public class RecipeController {
 
     // List of recipes based on selected category
     @RequestMapping("/category")
-    public String category(@RequestParam String category, Model model, Principal principal) {
+    public String category(@RequestParam String category, Model model) {
         List<Category> categories = categoryService.findAll();
         List<Recipe> recipes;
         if (category.equals("")) {
@@ -88,9 +89,28 @@ public class RecipeController {
         return "index";
     }
 
+    // List of recipes based on search term
+    @RequestMapping("/search")
+    public String search(@RequestParam String searchTerm, Model model) {
+        List<Category> categories = categoryService.findAll();
+        List<Recipe> recipes;
+        if (searchTerm.equals("")) {
+            recipes = recipeService.findAll();
+        } else {
+            recipes = recipeService.findByDescriptionContaining(searchTerm);
+        }
+        model.addAttribute("categories", categories);
+        model.addAttribute("recipes", recipes);
+        model.addAttribute("action", "/search");
+        model.addAttribute("searchTerm", searchTerm);
+        addCurrentLoggedInUserToModel(model);
+
+        return "index";
+    }
+
     // Single recipe page
     @RequestMapping("recipes/{recipeId}")
-    public String recipe(@PathVariable Long recipeId, Model model, Principal principal) {
+    public String recipe(@PathVariable Long recipeId, Model model) {
         // Get the recipe given by recipeId
         Recipe recipe = recipeService.findById(recipeId);
 
@@ -188,7 +208,7 @@ public class RecipeController {
 
     // Delete an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
-    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes, BindingResult result) {
+    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
 
@@ -203,7 +223,7 @@ public class RecipeController {
     // Mark/unmark an existing recipe as a favorite
     @RequestMapping(value = "recipes/{recipeId}/favorite", method = RequestMethod.POST)
     public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal,
-                                 RedirectAttributes redirectAttributes, Model model, BindingResult result) {
+                                 RedirectAttributes redirectAttributes, Model model) {
         Recipe recipe = recipeService.findById(recipeId);
         User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
         addCurrentLoggedInUserToModel(model);
@@ -229,7 +249,14 @@ public class RecipeController {
 
     @ExceptionHandler(CategoryNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String notFound(Model model, Exception ex) {
+    public String categoryNotFound(Model model, Exception ex) {
+        model.addAttribute("errorMessage", ex.getMessage());
+        return "error";
+    }
+
+    @ExceptionHandler(SearchTermNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String searchTermNotFound(Model model, Exception ex) {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error";
     }
