@@ -97,6 +97,7 @@ public class DataLoader implements ApplicationRunner {
             }
             count++;
             recipeService.save(recipe);
+            userService.save(user1);
         }
 
         int num = 1;
@@ -105,8 +106,8 @@ public class DataLoader implements ApplicationRunner {
             category.setName("Category " + i);
             categoryService.save(category);
 
-            Recipe recipe = new Recipe();
-            recipe.setCategory(category);
+            Recipe recipe2 = new Recipe();
+            recipe2.setCategory(category);
             Ingredient ingredient = new Ingredient();
             Ingredient ingredient2 = new Ingredient();
 
@@ -125,8 +126,8 @@ public class DataLoader implements ApplicationRunner {
             ingredients.add(ingredient);
             ingredients.add(ingredient2);
 
-            recipe.addIngredient(ingredient);
-            recipe.addIngredient(ingredient2);
+            recipe2.addIngredient(ingredient);
+            recipe2.addIngredient(ingredient2);
 
             Instruction instruction = new Instruction();
             Instruction instruction2 = new Instruction();
@@ -140,23 +141,24 @@ public class DataLoader implements ApplicationRunner {
             instructions.add(instruction);
             instructions.add(instruction2);
 
-            recipe.addInstruction(instruction);
-            recipe.addInstruction(instruction2);
+            recipe2.addInstruction(instruction);
+            recipe2.addInstruction(instruction2);
 
-            recipe.setName("TestRecipe " + i);
-            recipe.setDescription("TestDesc " + i);
+            recipe2.setName("TestRecipe " + i);
+            recipe2.setDescription("TestDesc " + i);
 
-            recipe.setImageUrl("TestUrl" + i);
+            recipe2.setImageUrl("TestUrl" + i);
 
-            recipe.setPrepTime(i + 1 + " minutes");
-            recipe.setCookTime(i + 1 + " hours");
+            recipe2.setPrepTime(i + 1 + " minutes");
+            recipe2.setCookTime(i + 1 + " hours");
 
-            recipe.setUser(user2);
+            recipe2.setUser(user2);
             if (num %2 == 0) {
-                user2.addFavorite(recipe);
+                user2.addFavorite(recipe2);
             }
             num++;
-            recipeService.save(recipe);
+            recipeService.save(recipe2);
+            userService.save(user2);
         }
     }
 }

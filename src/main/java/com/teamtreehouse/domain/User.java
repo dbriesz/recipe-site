@@ -35,12 +35,10 @@ public class User implements UserDetails {
     }
 
     public void addFavorite(Recipe recipe) {
-        recipe.setUser(this);
         favorites.add(recipe);
     }
 
     public void removeFavorite(Recipe recipe) {
-        recipe.setUser(this);
         favorites.remove(recipe);
     }
 

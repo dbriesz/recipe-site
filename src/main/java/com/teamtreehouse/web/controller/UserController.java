@@ -46,7 +46,7 @@ public class UserController {
         return "access_denied";
     }
 
-    private void getCurrentLoggedInUser(Model model) {
+    private void addCurrentLoggedInUserToModel(Model model) {
         User user = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal != null) {
@@ -75,11 +75,10 @@ public class UserController {
     @RequestMapping("/profile")
     public String userProfile(Model model, Principal principal) {
         // Get the user given by username
-        getCurrentLoggedInUser(model);
+        addCurrentLoggedInUserToModel(model);
         model.addAttribute("username", principal.getName());
         List<Recipe> recipes = recipeService.findAll();
         model.addAttribute("recipes", recipes);
-//        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
 
         return "profile";
     }

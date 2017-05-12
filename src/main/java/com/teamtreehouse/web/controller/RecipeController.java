@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.teamtreehouse.web.FlashMessage.Status.FAILURE;
-import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
 
 @Controller
 public class RecipeController {
@@ -52,13 +51,12 @@ public class RecipeController {
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/recipes/add");
         model.addAttribute("categories", categories);
-        getCurrentLoggedInUser(model);
-//        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
+        addCurrentLoggedInUserToModel(model);
 
         return "index";
     }
 
-    private void getCurrentLoggedInUser(Model model) {
+    private void addCurrentLoggedInUserToModel(Model model) {
         User user = null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (principal != null) {
@@ -82,11 +80,10 @@ public class RecipeController {
         } else {
             recipes = recipeService.findByCategoryName(category);
         }
-//        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
         model.addAttribute("categories", categories);
         model.addAttribute("recipes", recipes);
         model.addAttribute("action", "/category");
-        getCurrentLoggedInUser(model);
+        addCurrentLoggedInUserToModel(model);
 
         return "index";
     }
@@ -98,8 +95,7 @@ public class RecipeController {
         Recipe recipe = recipeService.findById(recipeId);
 
         model.addAttribute("recipe", recipe);
-        getCurrentLoggedInUser(model);
-//        model.addAttribute("currentUser", ((UsernamePasswordAuthenticationToken) principal).getPrincipal());
+        addCurrentLoggedInUserToModel(model);
 
         return "detail";
     }
@@ -120,7 +116,7 @@ public class RecipeController {
         model.addAttribute("ingredients", ingredients);
         model.addAttribute("instructions", instructions);
         model.addAttribute("cancelRedirect", String.format("%s", request.getHeader("referer")));
-        getCurrentLoggedInUser(model);
+        addCurrentLoggedInUserToModel(model);
 
         return "edit";
     }
@@ -140,7 +136,7 @@ public class RecipeController {
         model.addAttribute("ingredients", ingredientService.findAll());
         model.addAttribute("instructions", instructionService.findAll());
         model.addAttribute("cancelRedirect", String.format("%s", request.getHeader("referer")));
-        getCurrentLoggedInUser(model);
+        addCurrentLoggedInUserToModel(model);
 
         return "edit";
     }
@@ -205,16 +201,19 @@ public class RecipeController {
 
     // Mark/unmark an existing recipe as a favorite
     @RequestMapping(value = "recipes/{recipeId}/favorite", method = RequestMethod.POST)
-    public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal) {
+    public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal,
+                                 RedirectAttributes redirectAttributes, Model model) {
         Recipe recipe = recipeService.findById(recipeId);
         User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        if (!user.getFavorites().contains(recipe)) {
-            user.addFavorite(recipe);
-            userService.save(user);
-        } else {
+        if (recipe.isFavorited(user)) {
             user.removeFavorite(recipe);
-            userService.save(user);
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe removed from favorites!", FlashMessage.Status.SUCCESS));
+        } else {
+            user.addFavorite(recipe);
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe added to favorites!", FlashMessage.Status.SUCCESS));
         }
+        userService.save(user);
+        addCurrentLoggedInUserToModel(model);
 
         return String.format("redirect:%s", request.getHeader("referer"));
     }
