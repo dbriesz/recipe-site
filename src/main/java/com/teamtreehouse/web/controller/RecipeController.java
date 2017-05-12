@@ -188,34 +188,46 @@ public class RecipeController {
 
     // Delete an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
-    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes) {
+    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes, BindingResult result) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("Problem deleting recipe", FlashMessage.Status.FAILURE));
+            return String.format("redirect:/recipes/%s/delete", recipe.getId());
+        } else {
+            recipeService.delete(recipe);
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted!", FlashMessage.Status.SUCCESS));
 
-        recipeService.delete(recipe);
-        redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted!", FlashMessage.Status.SUCCESS));
-
-        // Redirect browser to home page
-        return "redirect:/";
+            // Redirect browser to home page
+            return "redirect:/";
+        }
     }
 
     // Mark/unmark an existing recipe as a favorite
     @RequestMapping(value = "recipes/{recipeId}/favorite", method = RequestMethod.POST)
     public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal,
-                                 RedirectAttributes redirectAttributes, Model model) {
+                                 RedirectAttributes redirectAttributes, Model model, BindingResult result) {
         Recipe recipe = recipeService.findById(recipeId);
         User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        if (recipe.isFavorited(user)) {
-            user.removeFavorite(recipe);
-            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe removed from favorites!", FlashMessage.Status.SUCCESS));
+        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("Problem saving recipe favorite status", FlashMessage.Status.FAILURE));
+            return String.format("redirect:%s", request.getHeader("referer"));
         } else {
-            user.addFavorite(recipe);
-            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe added to favorites!", FlashMessage.Status.SUCCESS));
-        }
-        userService.save(user);
-        addCurrentLoggedInUserToModel(model);
 
-        return String.format("redirect:%s", request.getHeader("referer"));
+            if (recipe.isFavorited(user)) {
+                user.removeFavorite(recipe);
+                redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe removed from favorites!", FlashMessage.Status.SUCCESS));
+            } else {
+                user.addFavorite(recipe);
+                redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe added to favorites!", FlashMessage.Status.SUCCESS));
+            }
+            userService.save(user);
+            addCurrentLoggedInUserToModel(model);
+
+            return String.format("redirect:%s", request.getHeader("referer"));
+        }
     }
 
     @ExceptionHandler(value = NumberFormatException.class)
