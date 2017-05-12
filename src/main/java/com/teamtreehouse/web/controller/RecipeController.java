@@ -208,16 +208,19 @@ public class RecipeController {
 
     // Delete an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
-    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes) {
+    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes, Principal principal) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
-
+        List<User> users = userService.findAll();
+        users.forEach(user -> {
+            user.removeFavorite(recipe);
+            userService.save(user);
+        });
         recipeService.delete(recipe);
         redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted!", FlashMessage.Status.SUCCESS));
 
         // Redirect browser to home page
         return "redirect:/";
-
     }
 
     // Mark/unmark an existing recipe as a favorite

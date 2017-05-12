@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -20,6 +22,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(User user) {
         userDao.save(user);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return (List<User>) userDao.findAll();
     }
 
     @Override
