@@ -65,6 +65,7 @@ public class RecipeController {
         }
 
         if (user != null) {
+            user = userService.findByUsername(user.getUsername());
             String name = user.getUsername(); //get logged in username
             model.addAttribute("username", name);
             model.addAttribute("currentUser", user);
@@ -208,14 +209,10 @@ public class RecipeController {
 
     // Delete an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
-    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes, Principal principal) {
+    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
-        List<User> users = userService.findAll();
-        users.forEach(user -> {
-            user.removeFavorite(recipe);
-            userService.save(user);
-        });
+
         recipeService.delete(recipe);
         redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted!", FlashMessage.Status.SUCCESS));
 
@@ -229,8 +226,8 @@ public class RecipeController {
                                  RedirectAttributes redirectAttributes, Model model) {
         Recipe recipe = recipeService.findById(recipeId);
         User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        user = userService.findByUsername(user.getUsername());
         addCurrentLoggedInUserToModel(model);
-
         if (recipe.isFavorited(user)) {
             user.removeFavorite(recipe);
             redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe removed from favorites!", FlashMessage.Status.SUCCESS));

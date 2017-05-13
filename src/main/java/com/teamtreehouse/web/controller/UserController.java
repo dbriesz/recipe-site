@@ -54,6 +54,7 @@ public class UserController {
         }
 
         if (user != null) {
+            user = userService.findByUsername(user.getUsername());
             String name = user.getUsername(); //get logged in username
             model.addAttribute("username", name);
             model.addAttribute("currentUser", user);

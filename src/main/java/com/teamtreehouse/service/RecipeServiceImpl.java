@@ -3,6 +3,7 @@ package com.teamtreehouse.service;
 import com.teamtreehouse.dao.RecipeDao;
 import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Recipe;
+import com.teamtreehouse.domain.User;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import com.teamtreehouse.web.exceptions.SearchTermNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,9 @@ import java.util.List;
 public class RecipeServiceImpl implements RecipeService {
     @Autowired
     private RecipeDao recipeDao;
+
+    @Autowired
+    private UserService userService;
 
     @Override
     public List<Recipe> findAll() {
@@ -32,6 +36,11 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public void delete(Recipe recipe) {
+        List<User> users = userService.findAll();
+        users.forEach(user -> {
+            user.removeFavorite(recipe);
+            userService.save(user);
+        });
         recipeDao.delete(recipe);
     }
 
