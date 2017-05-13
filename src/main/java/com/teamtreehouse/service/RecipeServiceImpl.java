@@ -25,6 +25,11 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
+    public List<Recipe> findByUser() {
+        return recipeDao.findByUser();
+    }
+
+    @Override
     public Recipe findById(Long id) {
         return recipeDao.findOne(id);
     }
@@ -63,6 +68,4 @@ public class RecipeServiceImpl implements RecipeService {
             return recipes;
         }
     }
-
-
 }

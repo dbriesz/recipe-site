@@ -1,9 +1,6 @@
 package com.teamtreehouse.web.controller;
 
-import com.teamtreehouse.domain.Category;
-import com.teamtreehouse.domain.Ingredient;
-import com.teamtreehouse.domain.Instruction;
-import com.teamtreehouse.domain.Recipe;
+import com.teamtreehouse.domain.*;
 import com.teamtreehouse.service.CategoryService;
 import com.teamtreehouse.service.IngredientService;
 import com.teamtreehouse.service.InstructionService;
@@ -166,6 +163,7 @@ public class RecipeControllerTest {
 
     private Recipe recipeBuilder() {
         Recipe recipe = new Recipe();
+        User user = new User();
         recipe.setId(1L);
         recipe.setName("TestName");
         recipe.setDescription("TestDesc");
@@ -175,7 +173,7 @@ public class RecipeControllerTest {
         recipe.addInstruction(new Instruction());
         recipe.setPrepTime("10 minutes");
         recipe.setCookTime("1 hour");
-        recipe.setFavorite(true);
+        recipe.isFavorited(user);
         return recipe;
     }
 

@@ -24,7 +24,7 @@
           </div>
           <form th:action="@{/search}" method="get">
             <div class="grid-40">
-              <input th:value="${searchTerm}" placeholder="Search"/>
+              <input name="searchTerm" th:value="${searchTerm}" placeholder="Search"/>
               <button style="display: inline" type="submit">Search</button>
             </div>
           </form>

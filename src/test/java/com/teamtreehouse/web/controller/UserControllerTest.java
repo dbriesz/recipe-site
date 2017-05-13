@@ -8,6 +8,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -44,18 +45,16 @@ public class UserControllerTest {
 
     @Test
     public void getUserProfileTest() throws Exception {
-        User user = userBuilder();
+        when(userService.findByUsername(org.mockito.Matchers.any(String.class))).thenReturn(new User());
 
-        when(userService.findByUsername("user1")).thenReturn(user);
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/1"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/profile"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile"));
     }
 
     @Test
     public void getAddUserPageTest() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/add"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/signup"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("signup"));
     }
@@ -64,9 +63,9 @@ public class UserControllerTest {
     public void getUserLoginPageTest() throws Exception {
         User user = userBuilder();
 
-        when(userService.findById(1L)).thenReturn(user);
+        when(userService.findByUsername("Test User")).thenReturn(user);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/users/1/login"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/login"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("login"));
     }
@@ -75,7 +74,7 @@ public class UserControllerTest {
     public void addUserTest() throws Exception {
         User user = userBuilder();
 
-        when(userService.findById(1L)).thenReturn(user);
+        when(userService.findByUsername("Test User")).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users/add"))
                 .andExpect(status().is3xxRedirection())
@@ -83,7 +82,7 @@ public class UserControllerTest {
     }
 
     private User userBuilder() {
-        User user = new User("");
+        User user = new User("Test User", "password", true, new String[]{"ROLE_USER", "ROLE_ADMIN"});
         user.setId(1L);
         return user;
     }

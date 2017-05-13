@@ -1,10 +1,7 @@
 package com.teamtreehouse.service;
 
 import com.teamtreehouse.dao.RecipeDao;
-import com.teamtreehouse.domain.Category;
-import com.teamtreehouse.domain.Ingredient;
-import com.teamtreehouse.domain.Instruction;
-import com.teamtreehouse.domain.Recipe;
+import com.teamtreehouse.domain.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,8 +23,6 @@ import static org.mockito.Mockito.when;
 public class RecipeServiceTest {
 
     private List<Recipe> recipes;
-    private Recipe recipe1;
-    private Recipe recipe2;
 
     @Mock
     private RecipeDao dao;
@@ -39,10 +34,12 @@ public class RecipeServiceTest {
     public void setUp() throws Exception {
         List<Ingredient> ingredients = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
-        recipe1 = new Recipe("TestName 1", "TestDesc 1", new Category("test"),
-                "TestUrl 1", ingredients, instructions, "Test PrepTime 1", "Test CookTime 1", false);
-        recipe2 = new Recipe("TestName 2", "TestDesc 2", new Category("test"),
-                "TestUrl 2", ingredients, instructions, "Test PrepTime 2", "Test CookTime 2", true);
+        User user1 = new User();
+        User user2 = new User();
+        Recipe recipe1 = new Recipe("TestName 1", "TestDesc 1", new Category("test"),
+                "TestUrl 1", ingredients, instructions, "Test PrepTime 1", "Test CookTime 1", user1);
+        Recipe recipe2 = new Recipe("TestName 2", "TestDesc 2", new Category("test"),
+                "TestUrl 2", ingredients, instructions, "Test PrepTime 2", "Test CookTime 2", user2);
         recipes = Arrays.asList(recipe1, recipe2);
     }
 

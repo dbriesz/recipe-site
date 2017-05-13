@@ -21,7 +21,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private boolean enabled;
     private String[] roles;
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Recipe> favorites = new ArrayList<>();
 
     public User() {
