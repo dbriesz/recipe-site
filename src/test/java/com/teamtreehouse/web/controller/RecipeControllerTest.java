@@ -126,7 +126,13 @@ public class RecipeControllerTest {
     @Test
     public void addNewRecipeTest() throws Exception {
         Recipe recipe = recipeBuilder();
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
 
+        when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findById(1L)).thenReturn(recipe);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/add"))
