@@ -8,6 +8,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -45,7 +48,13 @@ public class UserControllerTest {
 
     @Test
     public void getUserProfileTest() throws Exception {
-        when(userService.findByUsername(org.mockito.Matchers.any(String.class))).thenReturn(new User());
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
+
+        when(userService.findByUsername("user1")).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/profile"))
                 .andExpect(status().isOk())

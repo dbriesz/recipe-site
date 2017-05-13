@@ -77,7 +77,7 @@ public class UserController {
     public String userProfile(Model model, Principal principal) {
         // Get the user given by username
         addCurrentLoggedInUserToModel(model);
-        model.addAttribute("username", principal.getName());
+//        model.addAttribute("username", principal.getName());
         List<Recipe> recipes = recipeService.findByUser();
         model.addAttribute("recipes", recipes);
 

@@ -1,10 +1,7 @@
 package com.teamtreehouse.web.controller;
 
 import com.teamtreehouse.domain.*;
-import com.teamtreehouse.service.CategoryService;
-import com.teamtreehouse.service.IngredientService;
-import com.teamtreehouse.service.InstructionService;
-import com.teamtreehouse.service.RecipeService;
+import com.teamtreehouse.service.*;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
@@ -18,6 +15,11 @@ import org.mockito.MockitoAnnotations;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Matchers.contains;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -46,6 +48,9 @@ public class RecipeControllerTest {
     @Mock
     private InstructionService instructionService;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     private RecipeController recipeController;
     private MockMvc mockMvc;
@@ -69,7 +74,13 @@ public class RecipeControllerTest {
         List<Recipe> recipes = new ArrayList<>();
         recipes.add(recipe);
         recipes.add(recipe2);
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
 
+        when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findAll()).thenReturn(recipes);
         when(categoryService.findAll()).thenReturn(categories);
 
@@ -81,7 +92,13 @@ public class RecipeControllerTest {
     @Test
     public void getRecipeDetail() throws Exception {
         Recipe recipe = recipeBuilder();
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
 
+        when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findById(1L)).thenReturn(recipe);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/1"))
@@ -92,7 +109,13 @@ public class RecipeControllerTest {
     @Test
     public void formNewRecipeTest() throws Exception {
         List<Category> categories = new ArrayList<>();
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
 
+        when(userService.findByUsername("user1")).thenReturn(user);
         when(categoryService.findAll()).thenReturn(categories);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/add"))
@@ -117,7 +140,13 @@ public class RecipeControllerTest {
         List<Ingredient> ingredients = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
         Recipe recipe = recipeBuilder();
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
 
+        when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findById(1L)).thenReturn(recipe);
         when(categoryService.findAll()).thenReturn(categories);
         when(ingredientService.findAll()).thenReturn(ingredients);
@@ -176,5 +205,4 @@ public class RecipeControllerTest {
         recipe.isFavorited(user);
         return recipe;
     }
-
 }
