@@ -113,4 +113,8 @@ public class User implements UserDetails {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

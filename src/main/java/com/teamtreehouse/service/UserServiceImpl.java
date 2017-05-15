@@ -5,6 +5,7 @@ import com.teamtreehouse.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,10 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserDao userDao;
+/*
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+*/
 
     @Override
     public User findByUsername(String username) {
@@ -21,6 +26,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void save(User user) {
+//        user.setPassword(encoder.encode(user.getPassword()));
         userDao.save(user);
     }
 

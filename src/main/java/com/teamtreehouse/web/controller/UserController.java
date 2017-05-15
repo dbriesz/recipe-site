@@ -99,7 +99,7 @@ public class UserController {
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("Problem creating account. Please try again.", FlashMessage.Status.FAILURE));
-            return "signup";
+            return "redirect:/signup";
         }
         if (userService.findByUsername(user.getUsername()) == null) {
             user.setRoles(new String[]{"ROLE_USER"});
