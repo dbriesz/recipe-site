@@ -21,6 +21,7 @@
     <div class="grid-100">
       <div method="post" class="recipes">
         <form th:action="@{/users/add}" method="post" th:object="${user}">
+          <input type="hidden" th:field="*{id}"/>
         <div class="prefix-20 grid-60 suffix-20">
           <p>
             <input th:field="*{username}" placeholder="Username"/>

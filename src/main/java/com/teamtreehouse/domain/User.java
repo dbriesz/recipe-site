@@ -110,7 +110,7 @@ public class User implements UserDetails {
         return confirmPassword;
     }
 
-    public void setConfirmPassword(String password) {
-        this.confirmPassword = password;
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 }

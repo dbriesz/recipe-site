@@ -5,12 +5,14 @@ import com.teamtreehouse.domain.User;
 import com.teamtreehouse.service.RecipeService;
 import com.teamtreehouse.service.UserService;
 import com.teamtreehouse.web.FlashMessage;
+import com.teamtreehouse.web.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -28,6 +30,9 @@ public class UserController {
 
     @Autowired
     private RecipeService recipeService;
+
+    @Autowired
+    private UserValidator userValidator;
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String loginForm(Model model, HttpServletRequest request) {
@@ -88,8 +93,9 @@ public class UserController {
 
     // Add a new user
     @RequestMapping(value = "users/add", method = RequestMethod.POST)
-    public String addUser(@Valid User user, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String addUser(@ModelAttribute("user") User user, BindingResult result, RedirectAttributes redirectAttributes) {
         // Add user if valid data was received
+        userValidator.validate(user, result);
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("Problem creating account. Please try again.", FlashMessage.Status.FAILURE));
