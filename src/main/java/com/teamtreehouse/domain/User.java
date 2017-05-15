@@ -5,6 +5,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -17,7 +20,10 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
     @Column(length = 100)
+    @NotNull
+    @Size(min = 6)
     private String password;
+    private String confirmPassword;
     @Column(nullable = false)
     private boolean enabled;
     private String[] roles;
@@ -32,6 +38,11 @@ public class User implements UserDetails {
         this.password = password;
         this.enabled = enabled;
         this.roles = roles;
+    }
+
+    @AssertTrue(message = "Passwords do not match. Please try again.")
+    private boolean isValid() {
+        return this.password.equals(this.confirmPassword);
     }
 
     public void addFavorite(Recipe recipe) {
@@ -89,5 +100,17 @@ public class User implements UserDetails {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void setRoles(String[] roles) {
+        this.roles = roles;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String password) {
+        this.confirmPassword = password;
     }
 }

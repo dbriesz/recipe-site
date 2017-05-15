@@ -34,7 +34,9 @@ public class DataLoader implements ApplicationRunner {
         String[] roles1 = {"ROLE_USER", "ROLE_ADMIN"};
         String[] roles2 = {"ROLE_USER"};
         User user1 = new User("user1", "password", true, roles1);
+        user1.setConfirmPassword("password");
         User user2 = new User("user2", "password", true, roles2);
+        user2.setConfirmPassword("password");
         user1.setId(1L);
         user2.setId(2L);
         userService.save(user1);
