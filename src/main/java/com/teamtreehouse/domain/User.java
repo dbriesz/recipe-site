@@ -1,16 +1,12 @@
 package com.teamtreehouse.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 @Entity
@@ -53,29 +49,6 @@ public class User extends BaseEntity {
     public String getUsername() {
         return username;
     }
-
-    /*    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }*/
-
-/*    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        return authorities;
-    }*/
 
     public String getPassword() {
         return password;

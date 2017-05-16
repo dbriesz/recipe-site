@@ -1,6 +1,7 @@
 package com.teamtreehouse.web.controller;
 
 import com.teamtreehouse.domain.*;
+import com.teamtreehouse.domain.User;
 import com.teamtreehouse.service.*;
 import com.teamtreehouse.web.FlashMessage;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,20 +62,20 @@ public class RecipeController {
     }
 
     private void addCurrentLoggedInUserToModel(Model model) {
-        User user = null;
+        org.springframework.security.core.userdetails.User principal = null;
         if (SecurityContextHolder.getContext().getAuthentication() != null &&
                 SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
                 !(SecurityContextHolder.getContext().getAuthentication()
                         instanceof AnonymousAuthenticationToken)) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (principal != null) {
-                user = (User) principal;
+            Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (o != null) {
+                principal = (org.springframework.security.core.userdetails.User) o;
             }
 
-            if (user != null) {
-                user = userService.findByUsername(user.getUsername());
-                model.addAttribute("currentUser", user);
-                String name = user.getUsername(); //get logged in username
+            if (principal != null) {
+                User foundUser = userService.findByUsername(principal.getUsername());
+                model.addAttribute("currentUser", foundUser);
+                String name = foundUser.getUsername(); //get logged in username
                 model.addAttribute("username", name);
             }
         } else {
@@ -173,15 +175,16 @@ public class RecipeController {
 
     // Add a recipe
     @RequestMapping(value = "recipes/add", method = RequestMethod.POST)
-    public String addRecipe(@Valid Recipe recipe, BindingResult result,
-                            Principal principal, RedirectAttributes redirectAttributes) {
+    public String addRecipe(@Valid Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
         // Add recipe if valid data was received
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("Invalid input. Ingredient quantity must be a number. Please try again.", FlashMessage.Status.FAILURE));
             return "redirect:/recipes/add";
         } else {
-            User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+            Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) o;
+            User user = userService.findByUsername(principal.getUsername());
             recipe.setUser(user);
             recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
             recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
@@ -231,11 +234,12 @@ public class RecipeController {
 
     // Mark/unmark an existing recipe as a favorite
     @RequestMapping(value = "recipes/{recipeId}/favorite", method = RequestMethod.POST)
-    public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request, Principal principal,
+    public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request,
                                  RedirectAttributes redirectAttributes, Model model) {
         Recipe recipe = recipeService.findById(recipeId);
-        User user = (User) ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
-        user = userService.findByUsername(user.getUsername());
+        Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) o;
+        User user = userService.findByUsername(principal.getUsername());
         addCurrentLoggedInUserToModel(model);
         if (recipe.isFavorited(user)) {
             user.removeFavorite(recipe);

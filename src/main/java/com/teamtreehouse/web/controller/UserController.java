@@ -53,21 +53,21 @@ public class UserController {
     }
 
     private void addCurrentLoggedInUserToModel(Model model) {
-        User user = null;
+        org.springframework.security.core.userdetails.User principal = null;
         if (SecurityContextHolder.getContext().getAuthentication() != null &&
                 SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
                 !(SecurityContextHolder.getContext().getAuthentication()
                         instanceof AnonymousAuthenticationToken)) {
-            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if (principal != null) {
-                user = (User) principal;
+            Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (o != null) {
+                principal = (org.springframework.security.core.userdetails.User) o;
             }
 
-            if (user != null) {
-                user = userService.findByUsername(user.getUsername());
-                String name = user.getUsername(); //get logged in username
+            if (principal != null) {
+                User foundUser = userService.findByUsername(principal.getUsername());
+                model.addAttribute("currentUser", foundUser);
+                String name = foundUser.getUsername(); //get logged in username
                 model.addAttribute("username", name);
-                model.addAttribute("currentUser", user);
             }
         } else {
             throw new AccessDeniedException("Not logged in");
