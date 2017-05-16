@@ -46,6 +46,4 @@ public class UserServiceImpl implements UserService {
         // Return user object
         return user;
     }
-
-
 }

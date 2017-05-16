@@ -103,12 +103,11 @@ public class UserController {
     public String addUser(@Valid User user, BindingResult result,
                           RedirectAttributes redirectAttributes) {
         // Add user if valid data was received
-        if (result.hasErrors()) {
+/*        if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("Problem creating account. Please try again.", FlashMessage.Status.FAILURE));
             return "redirect:/signup";
-        } else {
-        if (user.equals(userService.findByUsername(user.getUsername()))) {
+        } else */if (user.equals(userService.findByUsername(user.getUsername()))) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("An account with that username already exists. Please try again.", FlashMessage.Status.FAILURE));
             return "redirect:/signup";
@@ -117,9 +116,8 @@ public class UserController {
             userService.save(user);
             redirectAttributes.addFlashAttribute("flash", new FlashMessage(
                     "Account successfully created! Please enter your username and password to log in.", FlashMessage.Status.SUCCESS));
+            return "redirect:/login";
         }
-    }
-        return "redirect:/login";
     }
 
     @ExceptionHandler(value = AccessDeniedException.class)
