@@ -43,7 +43,7 @@ $('#add-instruction').on('click', function () {
 $("#signupButton").click(function() {
     var password1 = $("#firstPassword").val();
     var password2 = $("#secondPassword").val();
-    if(password1 == password2) {
+    if(password1 === password2) {
         document.getElementById("signupForm").submit();
     } else {
         alert("Passwords don't match! Try re-typing them.");
