@@ -9,6 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -59,16 +61,23 @@ public class RecipeController {
 
     private void addCurrentLoggedInUserToModel(Model model) {
         User user = null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal != null) {
-            user = (User) principal;
-        }
+        if (SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+                !(SecurityContextHolder.getContext().getAuthentication()
+                        instanceof AnonymousAuthenticationToken)) {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal != null) {
+                user = (User) principal;
+            }
 
-        if (user != null) {
-            user = userService.findByUsername(user.getUsername());
-            String name = user.getUsername(); //get logged in username
-            model.addAttribute("username", name);
-            model.addAttribute("currentUser", user);
+            if (user != null) {
+                user = userService.findByUsername(user.getUsername());
+                model.addAttribute("currentUser", user);
+                String name = user.getUsername(); //get logged in username
+                model.addAttribute("username", name);
+            }
+        } else {
+            throw new AccessDeniedException("Not logged in");
         }
     }
 
@@ -259,5 +268,12 @@ public class RecipeController {
     public String searchTermNotFound(Model model, Exception ex) {
         model.addAttribute("errorMessage", ex.getMessage());
         return "error";
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public String adeHandler(HttpServletRequest request, AccessDeniedException ex) {
+        FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
+        flashMap.put("flash", new FlashMessage(ex.getMessage(), FAILURE));
+        return "redirect:/login";
     }
 }

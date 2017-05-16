@@ -5,23 +5,26 @@ import com.teamtreehouse.domain.User;
 import com.teamtreehouse.service.RecipeService;
 import com.teamtreehouse.service.UserService;
 import com.teamtreehouse.web.FlashMessage;
-import com.teamtreehouse.web.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
+
+import static com.teamtreehouse.web.FlashMessage.Status.FAILURE;
 
 @Controller
 public class UserController {
@@ -30,9 +33,6 @@ public class UserController {
 
     @Autowired
     private RecipeService recipeService;
-
-    @Autowired
-    private UserValidator userValidator;
 
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String loginForm(Model model, HttpServletRequest request) {
@@ -55,16 +55,23 @@ public class UserController {
 
     private void addCurrentLoggedInUserToModel(Model model) {
         User user = null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal != null) {
-            user = (User) principal;
-        }
+        if (SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+                !(SecurityContextHolder.getContext().getAuthentication()
+                        instanceof AnonymousAuthenticationToken)) {
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal != null) {
+                user = (User) principal;
+            }
 
-        if (user != null) {
-            user = userService.findByUsername(user.getUsername());
-            String name = user.getUsername(); //get logged in username
-            model.addAttribute("username", name);
-            model.addAttribute("currentUser", user);
+            if (user != null) {
+                user = userService.findByUsername(user.getUsername());
+                String name = user.getUsername(); //get logged in username
+                model.addAttribute("username", name);
+                model.addAttribute("currentUser", user);
+            }
+        } else {
+            throw new AccessDeniedException("Not logged in");
         }
     }
 
@@ -93,24 +100,32 @@ public class UserController {
 
     // Add a new user
     @RequestMapping(value = "users/add", method = RequestMethod.POST)
-    public String addUser(@ModelAttribute("user") User user, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String addUser(@Valid User user, BindingResult result,
+                          RedirectAttributes redirectAttributes) {
         // Add user if valid data was received
-        userValidator.validate(user, result);
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("Problem creating account. Please try again.", FlashMessage.Status.FAILURE));
             return "redirect:/signup";
-        }
-        if (userService.findByUsername(user.getUsername()) == null) {
+        } else {
+        if (user.equals(userService.findByUsername(user.getUsername()))) {
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("An account with that username already exists. Please try again.", FlashMessage.Status.FAILURE));
+            return "redirect:/signup";
+        } else {
             user.setRoles(new String[]{"ROLE_USER"});
             userService.save(user);
             redirectAttributes.addFlashAttribute("flash", new FlashMessage(
                     "Account successfully created! Please enter your username and password to log in.", FlashMessage.Status.SUCCESS));
-            return "redirect:/login";
-        } else {
-            redirectAttributes.addFlashAttribute("flash",
-                    new FlashMessage("An account with that username already exists. Please try again.", FlashMessage.Status.FAILURE));
-            return "redirect:/signup";
         }
+    }
+        return "redirect:/login";
+    }
+
+    @ExceptionHandler(value = AccessDeniedException.class)
+    public String adeHandler(HttpServletRequest request, AccessDeniedException ex) {
+        FlashMap flashMap = RequestContextUtils.getOutputFlashMap(request);
+        flashMap.put("flash", new FlashMessage(ex.getMessage(), FAILURE));
+        return "redirect:/login";
     }
 }
