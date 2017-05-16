@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -99,23 +98,24 @@ public class UserController {
 
     // Add a new user
     @RequestMapping(value = "users/add", method = RequestMethod.POST)
-    public String addUser(@Valid User user, BindingResult result,
+    public String addUser(User user, BindingResult result,
                           RedirectAttributes redirectAttributes) {
         // Add user if valid data was received
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("Problem creating account. Please try again.", FlashMessage.Status.FAILURE));
             return "redirect:/signup";
-        } else if (user.equals(userService.findByUsername(user.getUsername()))) {
-            redirectAttributes.addFlashAttribute("flash",
-                    new FlashMessage("An account with that username already exists. Please try again.", FlashMessage.Status.FAILURE));
-            return "redirect:/signup";
-        } else {
+        }
+        if (userService.findByUsername(user.getUsername()) == null) {
             user.setRoles(new String[]{"ROLE_USER"});
             userService.save(user);
             redirectAttributes.addFlashAttribute("flash", new FlashMessage(
                     "Account successfully created! Please enter your username and password to log in.", FlashMessage.Status.SUCCESS));
             return "redirect:/login";
+        } else {
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("An account with that username already exists. Please try again.", FlashMessage.Status.FAILURE));
+            return "redirect:/signup";
         }
     }
 

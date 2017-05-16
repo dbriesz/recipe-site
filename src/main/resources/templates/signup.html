@@ -19,31 +19,31 @@
     </div>
 
     <div class="grid-100">
+      <form id="signupForm" th:action="@{/users/add}" method="post" th:object="${user}">
       <div class="recipes">
-        <form id="signupForm" th:action="@{/users/add}" method="post" th:object="${user}">
           <input type="hidden" th:field="*{id}"/>
-        <div class="prefix-20 grid-60 suffix-20">
-          <p>
-            <input th:field="*{username}" placeholder="Username"/>
-          </p>
-        </div> <div class="clear"></div>
-        <div class="prefix-20 grid-60 suffix-20">
-          <p>
-            <input id="firstPassword" th:field="*{password}" placeholder="Password" type="password"/>
-          </p>
-        </div> <div class="clear"></div>
-        <div class="prefix-20 grid-60 suffix-20">
-          <p>
-            <input id="secondPassword" placeholder="Password Again" type="password"/>
-          </p>
-        </div> <div class="clear"></div>
-        <div class="prefix-20 grid-60 suffix-20">
-          <p>
-            <button type="button" id="signupButton">Sign-up</button>
-          </p>
-        </div> <div class="clear"></div>
-        </form>
+          <div class="prefix-20 grid-60 suffix-20">
+            <p>
+              <input th:field="*{username}" placeholder="Username"/>
+            </p>
+          </div> <div class="clear"></div>
+          <div class="prefix-20 grid-60 suffix-20">
+            <p>
+              <input id="firstPassword" th:field="*{password}" placeholder="Password" type="password"/>
+            </p>
+          </div> <div class="clear"></div>
+          <div class="prefix-20 grid-60 suffix-20">
+            <p>
+              <input id="secondPassword" placeholder="Password Again" type="password"/>
+            </p>
+          </div> <div class="clear"></div>
+          <div class="prefix-20 grid-60 suffix-20">
+            <p>
+              <button type="button" id="signupButton">Sign-up</button>
+            </p>
+          </div> <div class="clear"></div>
       </div> <!-- recipes -->
+      </form>
     </div> <!-- grid-100 -->
   </div> <!-- grid-container -->
 
