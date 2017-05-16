@@ -6,7 +6,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,12 +15,9 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
     @NotNull
     private String username;
-    @Column(length = 100)
     @NotNull
-    @Size(min = 6)
     private String password;
     @Column(nullable = false)
     private boolean enabled;
@@ -98,9 +94,5 @@ public class User implements UserDetails {
 
     public void setRoles(String[] roles) {
         this.roles = roles;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

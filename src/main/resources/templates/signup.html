@@ -19,8 +19,8 @@
     </div>
 
     <div class="grid-100">
-      <div method="post" class="recipes">
-        <form th:action="@{/users/add}" method="post" th:object="${user}">
+      <div class="recipes">
+        <form id="signupForm" th:action="@{/users/add}" method="post" th:object="${user}">
           <input type="hidden" th:field="*{id}"/>
         <div class="prefix-20 grid-60 suffix-20">
           <p>
@@ -39,7 +39,7 @@
         </div> <div class="clear"></div>
         <div class="prefix-20 grid-60 suffix-20">
           <p>
-            <button type="submit" id="signupButton">Sign-up</button>
+            <button type="button" id="signupButton">Sign-up</button>
           </p>
         </div> <div class="clear"></div>
         </form>
