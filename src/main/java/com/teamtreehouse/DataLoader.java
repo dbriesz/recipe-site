@@ -37,6 +37,7 @@ public class DataLoader implements ApplicationRunner {
         User user2 = new User("user2", "password", true, roles2);
         user1.setId(1L);
         user2.setId(2L);
+
         userService.save(user1);
         userService.save(user2);
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Category {
+public class Category extends BaseEntity {
     @Column(unique = true)
     private String name;
     @OneToMany
@@ -30,14 +30,6 @@ public class Category {
         return recipes;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getName() {
         return name;
     }
@@ -53,16 +45,11 @@ public class Category {
 
         Category category = (Category) o;
 
-        if (id != null ? !id.equals(category.id) : category.id != null) return false;
-        if (name != null ? !name.equals(category.name) : category.name != null) return false;
-        return recipes != null ? recipes.equals(category.recipes) : category.recipes == null;
+        return name != null ? name.equals(category.name) : category.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (recipes != null ? recipes.hashCode() : 0);
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 }

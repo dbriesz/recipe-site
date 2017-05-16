@@ -3,7 +3,7 @@ package com.teamtreehouse.domain;
 import javax.persistence.*;
 
 @Entity
-public class Ingredient {
+public class Ingredient extends BaseEntity {
     private String name;
     private String measurement;
     private int quantity;
@@ -17,14 +17,6 @@ public class Ingredient {
         this.name = name;
         this.measurement = measurement;
         this.quantity = quantity;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -58,18 +50,11 @@ public class Ingredient {
 
         Ingredient that = (Ingredient) o;
 
-        if (quantity != that.quantity) return false;
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        return measurement != null ? measurement.equals(that.measurement) : that.measurement == null;
+        return name != null ? name.equals(that.name) : that.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (measurement != null ? measurement.hashCode() : 0);
-        result = 31 * result + quantity;
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 }

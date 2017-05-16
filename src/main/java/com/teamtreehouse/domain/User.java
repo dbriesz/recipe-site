@@ -1,5 +1,6 @@
 package com.teamtreehouse.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -8,16 +9,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
-public class User implements UserDetails {
-//    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
+public class User extends BaseEntity {
+    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     private String username;
+    @JsonIgnore
     private String password;
     @Column(nullable = false)
     private boolean enabled;
+    @JsonIgnore
     private String[] roles;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Recipe> favorites = new ArrayList<>();
@@ -29,14 +33,10 @@ public class User implements UserDetails {
     public User(String username, String password, boolean enabled, String[] roles) {
         this();
         this.username = username;
-        this.password = password;
+        setPassword(password);
         this.enabled = enabled;
         this.roles = roles;
     }
-
-/*    public void setPassword(String password) {
-        this.password = PASSWORD_ENCODER.encode(password);
-    }*/
 
     public void addFavorite(Recipe recipe) {
         favorites.add(recipe);
@@ -50,12 +50,11 @@ public class User implements UserDetails {
         return favorites;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
 
-    @Override
+    /*    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -68,26 +67,38 @@ public class User implements UserDetails {
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
-    }
+    }*/
 
-    @Override
+/*    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
         authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         return authorities;
-    }
+    }*/
 
-    @Override
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = PASSWORD_ENCODER.encode(password);
     }
 
     public boolean isEnabled() {
         return enabled;
     }
 
+    public String[] getRoles() {
+        return roles;
+    }
+
     public void setRoles(String[] roles) {
         this.roles = roles;
+    }
+
+    public boolean hasAdminRole() {
+        List<String> roles = Arrays.asList(getRoles());
+        return roles.contains("ROLE_ADMIN");
     }
 }

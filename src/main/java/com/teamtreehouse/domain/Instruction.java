@@ -3,7 +3,7 @@ package com.teamtreehouse.domain;
 import javax.persistence.*;
 
 @Entity
-public class Instruction {
+public class Instruction extends BaseEntity {
     private String description;
 
     public Instruction() {
