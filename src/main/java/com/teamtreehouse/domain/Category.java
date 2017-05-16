@@ -6,18 +6,18 @@ import java.util.List;
 
 @Entity
 public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     @Column(unique = true)
     private String name;
     @OneToMany
-    private List<Recipe> recipes = new ArrayList<>();
+    private List<Recipe> recipes;
 
     public Category() {
+        super();
+        recipes = new ArrayList<>();
     }
 
     public Category(String name) {
+        this();
         this.name = name;
     }
 

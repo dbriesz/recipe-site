@@ -4,17 +4,16 @@ import javax.persistence.*;
 
 @Entity
 public class Ingredient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String name;
     private String measurement;
     private int quantity;
 
     public Ingredient() {
+        super();
     }
 
     public Ingredient(String name, String measurement, int quantity) {
+        this();
         this.name = name;
         this.measurement = measurement;
         this.quantity = quantity;

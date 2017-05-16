@@ -3,6 +3,8 @@ package com.teamtreehouse.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,9 +13,7 @@ import java.util.List;
 
 @Entity
 public class User implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+//    public static final PasswordEncoder PASSWORD_ENCODER = new BCryptPasswordEncoder();
     private String username;
     private String password;
     @Column(nullable = false)
@@ -23,14 +23,20 @@ public class User implements UserDetails {
     private List<Recipe> favorites = new ArrayList<>();
 
     public User() {
+        super();
     }
 
     public User(String username, String password, boolean enabled, String[] roles) {
+        this();
         this.username = username;
         this.password = password;
         this.enabled = enabled;
         this.roles = roles;
     }
+
+/*    public void setPassword(String password) {
+        this.password = PASSWORD_ENCODER.encode(password);
+    }*/
 
     public void addFavorite(Recipe recipe) {
         favorites.add(recipe);
@@ -42,14 +48,6 @@ public class User implements UserDetails {
 
     public List<Recipe> getFavorites() {
         return favorites;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     @Override

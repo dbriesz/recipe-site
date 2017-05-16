@@ -4,24 +4,15 @@ import javax.persistence.*;
 
 @Entity
 public class Instruction {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String description;
 
     public Instruction() {
+        super();
     }
 
     public Instruction(String description) {
+        this();
         this.description = description;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getDescription() {
@@ -39,14 +30,11 @@ public class Instruction {
 
         Instruction that = (Instruction) o;
 
-        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         return description != null ? description.equals(that.description) : that.description == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        return result;
+        return description != null ? description.hashCode() : 0;
     }
 }

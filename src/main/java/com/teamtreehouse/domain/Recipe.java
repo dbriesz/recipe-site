@@ -5,19 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Recipe {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Recipe extends BaseEntity {
     private String name;
     private String description;
     @ManyToOne
     private Category category;
     private String imageUrl;
     @OneToMany
-    private List<Ingredient> ingredients = new ArrayList<>();
+    private List<Ingredient> ingredients;
     @OneToMany
-    private List<Instruction> instructions = new ArrayList<>();
+    private List<Instruction> instructions;
     private String prepTime;
     private String cookTime;
     @ManyToOne(fetch=FetchType.LAZY)
@@ -25,11 +22,15 @@ public class Recipe {
     private User user;
 
     public Recipe() {
+        super();
+        ingredients = new ArrayList<>();
+        instructions = new ArrayList<>();
     }
 
     public Recipe(String name, String description, Category category,
                   String imageUrl, List<Ingredient> ingredients, List<Instruction> instructions,
                   String prepTime, String cookTime, User user) {
+        this();
         this.name = name;
         this.description = description;
         this.category = category;
@@ -55,14 +56,6 @@ public class Recipe {
 
     public List<Instruction> getInstructions() {
         return instructions;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -132,14 +125,11 @@ public class Recipe {
 
         Recipe recipe = (Recipe) o;
 
-        if (id != null ? !id.equals(recipe.id) : recipe.id != null) return false;
         return name != null ? name.equals(recipe.name) : recipe.name == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id != null ? id.hashCode() : 0;
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        return result;
+        return name != null ? name.hashCode() : 0;
     }
 }
