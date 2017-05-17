@@ -3,6 +3,7 @@ package com.teamtreehouse.service;
 import com.teamtreehouse.dao.UserDao;
 import com.teamtreehouse.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

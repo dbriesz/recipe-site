@@ -12,14 +12,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.FlashMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -36,13 +35,13 @@ public class UserController {
     @RequestMapping(path = "/login", method = RequestMethod.GET)
     public String loginForm(Model model, HttpServletRequest request) {
         model.addAttribute("user", new User());
-        try {
-            Object flash = request.getSession().getAttribute("flash");
-            model.addAttribute("flash", flash);
+        Object flash = request.getSession().getAttribute("flash");
+        if (flash == null){
+            return "login";
+        } else {
+        model.addAttribute("flash", flash);
 
-            request.getSession().removeAttribute("flash");
-        } catch (Exception ex) {
-            // "flash" session attribute must not exist...do nothing and proceed normally
+        request.getSession().removeAttribute("flash");
         }
         return "login";
     }
@@ -98,7 +97,7 @@ public class UserController {
 
     // Add a new user
     @RequestMapping(value = "users/add", method = RequestMethod.POST)
-    public String addUser(User user, BindingResult result,
+    public String addUser(@Valid User user, BindingResult result,
                           RedirectAttributes redirectAttributes) {
         // Add user if valid data was received
         if (result.hasErrors()) {
@@ -109,8 +108,8 @@ public class UserController {
         if (userService.findByUsername(user.getUsername()) == null) {
             user.setRoles(new String[]{"ROLE_USER"});
             userService.save(user);
-            redirectAttributes.addFlashAttribute("flash", new FlashMessage(
-                    "Account successfully created! Please enter your username and password to log in.", FlashMessage.Status.SUCCESS));
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("Account successfully created! Please enter your username and password to log in.", FlashMessage.Status.SUCCESS));
             return "redirect:/login";
         } else {
             redirectAttributes.addFlashAttribute("flash",

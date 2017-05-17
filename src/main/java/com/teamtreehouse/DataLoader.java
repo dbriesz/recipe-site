@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 @Component
 public class DataLoader implements ApplicationRunner {
@@ -161,5 +162,64 @@ public class DataLoader implements ApplicationRunner {
             recipeService.save(recipe2);
             userService.save(user2);
         }
+
+/*
+        List<User> users = Arrays.asList(
+               new User("user1", "password", true, new String[] {"ROLE_USER", "ROLE_ADMIN}),
+               new User("user2", "password", true, new String[] {"ROLE_USER"})
+        );
+
+        String[] categories = {
+                "Breakfast",
+                "Lunch",
+                "Dinner",
+                "Snack",
+                "Appetizer"
+        };
+
+        String[] recipeNames = {
+                "Stew",
+                "Meatballs",
+                "Pizza",
+                "Salad",
+                "Burger"
+        };
+
+        String[] measurements = {
+                "1 cup",
+                "2 tablespoons",
+                "1 teaspoon",
+                "1/2 cup",
+                "1/4 cup"
+        };
+
+        String[] ingredients = {
+                "Flour",
+                "Sugar",
+                "Salt",
+                "Eggs",
+                "Milk"
+        };
+
+        String[] instructions = {
+                "Preheat oven for 10 minutes",
+                "Add a pinch of salt",
+                "Place in oven for 30 minutes",
+                "Heat oil in pan over medium heat",
+                "Simmer for 20 minutes over low heat"
+        };
+
+        List<Recipe> recipes = new ArrayList<>();
+        IntStream.range(0, 10)
+                .forEach(i -> {
+                    String ingredient = ingredients[i % ingredients.length];
+                    String instruction = instructions[i % instructions.length];
+                    String category = categories[i % categories.length];
+                    Category c = new Category();
+                    c.setName(String.format());
+                    Recipe r = new Recipe();
+
+
+                });*/
     }
 }
