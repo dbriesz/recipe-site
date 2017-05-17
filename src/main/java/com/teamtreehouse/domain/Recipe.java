@@ -1,11 +1,16 @@
 package com.teamtreehouse.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Recipe extends BaseEntity {
+    @NotNull
     private String name;
     private String description;
     @ManyToOne

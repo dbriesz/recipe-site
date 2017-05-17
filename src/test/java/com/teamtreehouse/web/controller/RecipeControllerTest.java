@@ -4,22 +4,26 @@ import com.teamtreehouse.domain.*;
 import com.teamtreehouse.service.*;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.mockito.Matchers.contains;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -32,7 +36,24 @@ import java.util.List;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
+@WithUserDetails("user1")
 public class RecipeControllerTest {
+
+    @Configuration
+    @EnableGlobalMethodSecurity(prePostEnabled = true)
+    @ComponentScan
+    static class Config {
+        @Autowired
+        public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+            auth
+                    .userDetailsService(userDetailsService());
+        }
+
+        @Bean
+        public UserDetailsService userDetailsService() {
+            return new DetailsService();
+        }
+    }
 
     final String BASE_URL = "http://localhost:8080";
 
@@ -68,17 +89,14 @@ public class RecipeControllerTest {
     @Test
     public void getIndex() throws Exception {
         List<Category> categories = new ArrayList<>();
+        User user = new User();
+
         Recipe recipe = recipeBuilder();
         Recipe recipe2 = recipeBuilder();
 
         List<Recipe> recipes = new ArrayList<>();
         recipes.add(recipe);
         recipes.add(recipe2);
-        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, "user1");
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(auth);
 
         when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findAll()).thenReturn(recipes);
@@ -86,7 +104,7 @@ public class RecipeControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/"))
             .andExpect(status().isOk())
-            .andExpect(view().name("index"));
+            .andExpect(view().name("login"));
     }
 
     @Test
@@ -98,7 +116,7 @@ public class RecipeControllerTest {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(auth);
 
-        when(userService.findByUsername("user1")).thenReturn(user);
+        when(userService.findByUsername("user")).thenReturn(user);
         when(recipeService.findById(1L)).thenReturn(recipe);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/1"))

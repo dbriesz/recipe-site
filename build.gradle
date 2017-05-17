@@ -25,8 +25,12 @@ dependencies {
     compile 'org.springframework.data:spring-data-rest-hal-browser'
     compile 'org.slf4j:slf4j-api:1.7.13'
     compile 'org.springframework.boot:spring-boot-starter-security'
+    compile 'org.springframework.security:spring-security-web'
+    compile 'org.springframework.security:spring-security-config'
+    compile 'org.springframework.security:spring-security-test'
 
     testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'org.springframework:spring-test'
     testCompile 'org.dbunit:dbunit:2.5.1'
     testCompile 'com.github.springtestdbunit:spring-test-dbunit:1.2.1'
     testCompile 'org.assertj:assertj-core:3.2.0'

@@ -1,8 +1,11 @@
 package com.teamtreehouse.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Ingredient extends BaseEntity {
     private String name;
     private String measurement;

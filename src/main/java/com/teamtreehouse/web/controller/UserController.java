@@ -69,7 +69,7 @@ public class UserController {
                 model.addAttribute("username", name);
             }
         } else {
-            throw new AccessDeniedException("Not logged in");
+            throw new AccessDeniedException("Please log in or create an account");
         }
     }
 
