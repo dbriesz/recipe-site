@@ -14,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,5 +45,27 @@ public class CategoryServiceTest {
         when(dao.findOne(1L)).thenReturn(new Category());
         assertThat(service.findById(1L), instanceOf(Category.class));
         verify(dao).findOne(1L);
+    }
+
+    @Test
+    public void saveCategoryTest() throws Exception {
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("test");
+
+        when(dao.findOne(1L)).thenReturn(category);
+        Category result = service.findById(1L);
+
+        assertEquals(1, result.getId().intValue());
+        assertEquals("test", result.getName());
+    }
+
+    @Test
+    public void deleteCategoryTest() throws Exception {
+        Category category = new Category();
+
+        when(dao.findOne(1L)).thenReturn(category);
+        service.delete(category);
+        verify(dao, times(1)).delete(category);
     }
 }

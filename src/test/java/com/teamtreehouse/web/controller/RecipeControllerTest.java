@@ -6,16 +6,21 @@ import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import com.teamtreehouse.web.exceptions.SearchTermNotFoundException;
 import org.hamcrest.Matchers;
 import org.hamcrest.beans.HasPropertyWithValue;
+import org.hamcrest.collection.IsCollectionWithSize;
+import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import static com.teamtreehouse.web.FlashMessage.Status.FAILURE;
 import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -201,6 +206,24 @@ public class RecipeControllerTest {
     }
 
     @Test
+    public void deletingRecipeRemovesFavorite() throws Exception {
+        Recipe recipe = recipeBuilder();
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
+        List<Recipe> favorites = user.getFavorites();
+
+        when(userService.findByUsername("user1")).thenReturn(user);
+        when(recipeService.findById(1L)).thenReturn(recipe);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/delete").with(user("user1")));
+
+        assertThat(favorites, IsEmptyCollection.empty());
+    }
+
+    @Test
     public void categoryFoundTest() throws Exception {
         List<Recipe> recipes = new ArrayList<>();
         Recipe recipe = recipeBuilder();
@@ -293,6 +316,38 @@ public class RecipeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("ex", Matchers.instanceOf(SearchTermNotFoundException.class)))
                 .andExpect(view().name("error"));
+    }
+
+    @Test
+    public void ingredientsSavedWhenRecipeSaved() throws Exception {
+        Recipe recipe = recipeBuilder();
+        List<Ingredient> ingredients = recipe.getIngredients();
+
+        when(ingredientService.findAll()).thenReturn(ingredients);
+
+        recipe.addIngredient(new Ingredient());
+        recipe.addIngredient(new Ingredient());
+        recipe.addIngredient(new Ingredient());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipes/add").with(user("user1")));
+
+        assertThat(ingredients, hasSize(4));
+    }
+
+    @Test
+    public void instructionsSavedWhenRecipeSaved() throws Exception {
+        Recipe recipe = recipeBuilder();
+        List<Instruction> instructions = recipe.getInstructions();
+
+        when(instructionService.findAll()).thenReturn(instructions);
+
+        recipe.addInstruction(new Instruction());
+        recipe.addInstruction(new Instruction());
+        recipe.addInstruction(new Instruction());
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/recipes/add").with(user("user1")));
+
+        assertThat(instructions, hasSize(4));
     }
 
     private Recipe recipeBuilder() {

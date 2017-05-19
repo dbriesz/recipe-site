@@ -64,8 +64,6 @@ public class UserControllerTest {
 
         when(userService.findByUsername("user1")).thenReturn(user);
 
-
-
         mockMvc.perform(MockMvcRequestBuilders.get("/profile").with(user("user1")))
                 .andExpect(status().isOk())
                 .andExpect(view().name("profile"));

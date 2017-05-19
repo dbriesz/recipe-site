@@ -14,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,5 +45,31 @@ public class IngredientServiceTest {
         when(dao.findOne(1L)).thenReturn(new Ingredient());
         assertThat(service.findById(1L), instanceOf(Ingredient.class));
         verify(dao).findOne(1L);
+    }
+
+    @Test
+    public void saveIngredientTest() throws Exception {
+        Ingredient ingredient = new Ingredient();
+        ingredient.setId(1L);
+        ingredient.setName("test");
+        ingredient.setMeasurement("1 cup");
+        ingredient.setQuantity(1);
+
+        when(dao.findOne(1L)).thenReturn(ingredient);
+        Ingredient result = service.findById(1L);
+
+        assertEquals(1, result.getId().intValue());
+        assertEquals("test", result.getName());
+        assertEquals("1 cup", result.getMeasurement());
+        assertEquals(1, result.getQuantity());
+    }
+
+    @Test
+    public void deleteIngredientTest() throws Exception {
+        Ingredient ingredient = new Ingredient();
+
+        when(dao.findOne(1L)).thenReturn(ingredient);
+        service.delete(ingredient);
+        verify(dao, times(1)).delete(ingredient);
     }
 }

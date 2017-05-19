@@ -16,6 +16,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -26,6 +27,9 @@ public class RecipeServiceTest {
 
     @Mock
     private RecipeDao dao;
+
+    @Mock
+    private UserService userService;
 
     @InjectMocks
     private RecipeService service = new RecipeServiceImpl();
@@ -74,5 +78,42 @@ public class RecipeServiceTest {
         assertEquals("findByDescriptionContaining should return one recipe",
                 2, service.findByDescriptionContaining("TestDesc").size());
         verify(dao).findByDescriptionContaining("TestDesc");
+    }
+
+    @Test
+    public void saveRecipeTest() throws Exception {
+        List<Ingredient> ingredients = new ArrayList<>();
+        List<Instruction> instructions = new ArrayList<>();
+        User user1 = new User();
+        Recipe recipe = new Recipe("TestName 1", "TestDesc 1", new Category("test"),
+                "TestUrl 1", ingredients, instructions, "Test PrepTime 1", "Test CookTime 1", user1);
+        recipe.setId(1L);
+        recipe.addIngredient(new Ingredient());
+        recipe.addInstruction(new Instruction());
+
+        when(dao.findOne(1L)).thenReturn(recipe);
+        Recipe result = service.findById(1L);
+
+        assertEquals(1, result.getId().intValue());
+        assertEquals("TestName 1", result.getName());
+        assertEquals("TestDesc 1", result.getDescription());
+        assertEquals("test", result.getCategory().getName());
+        assertEquals("TestUrl 1", result.getImageUrl());
+        assertEquals(1, result.getIngredients().size());
+        assertEquals(1, result.getInstructions().size());
+        assertEquals("Test PrepTime 1", result.getPrepTime());
+        assertEquals("Test CookTime 1", result.getCookTime());
+    }
+
+    @Test
+    public void deleteRecipeTest() throws Exception {
+        Recipe recipe = new Recipe();
+        User user = new User();
+        user.setId(1L);
+        user.addFavorite(recipe);
+
+        when(dao.findOne(1L)).thenReturn(recipe);
+        service.delete(recipe);
+        verify(dao, times(1)).delete(recipe);
     }
 }

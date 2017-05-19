@@ -14,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -44,5 +45,27 @@ public class InstructionServiceTest {
         when(dao.findOne(1L)).thenReturn(new Instruction());
         assertThat(service.findById(1L), instanceOf(Instruction.class));
         verify(dao).findOne(1L);
+    }
+
+    @Test
+    public void saveInstructionTest() throws Exception {
+        Instruction instruction = new Instruction();
+        instruction.setId(1L);
+        instruction.setDescription("test");
+
+        when(dao.findOne(1L)).thenReturn(instruction);
+        Instruction result = service.findById(1L);
+
+        assertEquals(1, result.getId().intValue());
+        assertEquals("test", result.getDescription());
+    }
+
+    @Test
+    public void deleteInstructionTest() throws Exception {
+        Instruction instruction = new Instruction();
+
+        when(dao.findOne(1L)).thenReturn(instruction);
+        service.delete(instruction);
+        verify(dao, times(1)).delete(instruction);
     }
 }
