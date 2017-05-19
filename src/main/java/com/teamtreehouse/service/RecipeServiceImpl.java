@@ -1,7 +1,6 @@
 package com.teamtreehouse.service;
 
 import com.teamtreehouse.dao.RecipeDao;
-import com.teamtreehouse.domain.Category;
 import com.teamtreehouse.domain.Recipe;
 import com.teamtreehouse.domain.User;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
@@ -25,8 +24,8 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public List<Recipe> findByUser() {
-        return recipeDao.findByUser();
+    public List<Recipe> findByUser(Long id) {
+        return recipeDao.findByUser(id);
     }
 
     @Override

@@ -73,6 +73,27 @@ public class UserController {
         }
     }
 
+    public User getUserByPrincipal() {
+        org.springframework.security.core.userdetails.User principal = null;
+        if (SecurityContextHolder.getContext().getAuthentication() != null &&
+                SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
+                !(SecurityContextHolder.getContext().getAuthentication()
+                        instanceof AnonymousAuthenticationToken)) {
+            Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (o != null) {
+                principal = (org.springframework.security.core.userdetails.User) o;
+            }
+
+            if (principal != null) {
+                return userService.findByUsername(principal.getUsername());
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
     // User signup page
     @RequestMapping("/signup")
     public String formNewUser(Model model) {
@@ -86,10 +107,11 @@ public class UserController {
 
     // User profile page
     @RequestMapping("/profile")
-    public String userProfile(Model model, Principal principal) {
-        // Get the user given by username
+    public String userProfile(Model model) {
+        // Get the user owned recipes by id
         addCurrentLoggedInUserToModel(model);
-        List<Recipe> recipes = recipeService.findByUser();
+        User currentUser = getUserByPrincipal();
+        List<Recipe> recipes = recipeService.findByUser(currentUser.getId());
         model.addAttribute("recipes", recipes);
 
         return "profile";

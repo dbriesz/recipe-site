@@ -95,10 +95,10 @@ public class RecipeServiceTest {
         SecurityContext securityContext = SecurityContextHolder.getContext();
         securityContext.setAuthentication(auth);
 
-        when(dao.findByUser()).thenReturn(recipes);
+        when(dao.findByUser(1L)).thenReturn(recipes);
 
-        assertEquals("findByUser should return one recipe", 2, service.findByUser().size());
-        verify(dao).findByUser();
+        assertEquals("findByUser should return one recipe", 2, service.findByUser(1L).size());
+        verify(dao).findByUser(1L);
     }
 
     @Test
