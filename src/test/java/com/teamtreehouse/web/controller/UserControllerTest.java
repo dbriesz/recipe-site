@@ -20,9 +20,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import static com.teamtreehouse.web.FlashMessage.Status.FAILURE;
 import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
+import static org.hamcrest.Matchers.any;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

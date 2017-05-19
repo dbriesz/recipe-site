@@ -58,6 +58,7 @@ public class InstructionServiceTest {
 
         assertEquals(1, result.getId().intValue());
         assertEquals("test", result.getDescription());
+        verify(dao).findOne(1L);
     }
 
     @Test

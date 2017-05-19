@@ -62,6 +62,7 @@ public class IngredientServiceTest {
         assertEquals("test", result.getName());
         assertEquals("1 cup", result.getMeasurement());
         assertEquals(1, result.getQuantity());
+        verify(dao).findOne(1L);
     }
 
     @Test

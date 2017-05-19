@@ -17,6 +17,7 @@ public class DetailsServiceTest {
     @Mock
     private UserService userService;
 
+
     @InjectMocks
     private DetailsService service;
 

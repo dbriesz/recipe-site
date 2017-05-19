@@ -62,6 +62,7 @@ public class CategoryServiceTest {
         assertEquals(1, result.getId().intValue());
         assertEquals("test", result.getName());
         assertEquals(1, result.getRecipes().size());
+        verify(dao).findOne(1L);
     }
 
     @Test

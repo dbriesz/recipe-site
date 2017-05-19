@@ -69,6 +69,7 @@ public class UserServiceTest {
         assertEquals(1, result.getId().intValue());
         assertEquals("test", result.getUsername());
         assertEquals(1, result.getRoles().length);
+        verify(dao).findOne(1L);
     }
 
     @Test
