@@ -46,7 +46,7 @@ public class Ingredient extends BaseEntity {
         this.quantity = quantity;
     }
 
-    @Override
+/*    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -64,5 +64,5 @@ public class Ingredient extends BaseEntity {
         result = 31 * result + (measurement != null ? measurement.hashCode() : 0);
         result = 31 * result + quantity;
         return result;
-    }
+    }*/
 }

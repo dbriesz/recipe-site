@@ -99,6 +99,20 @@ public class UserControllerTest {
                 .andExpect(flash().attribute("flash", hasProperty("status", equalTo(SUCCESS))));
     }
 
+    @Test
+    public void getAccessDeniedPageTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/access_denied"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("access_denied"));
+    }
+
+    @Test
+    public void redirectToLoginPageTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/profile"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/login"));
+    }
+
     private User userBuilder() {
         User user = new User("Test User", "password", true, new String[]{"ROLE_USER", "ROLE_ADMIN"});
         user.setId(1L);

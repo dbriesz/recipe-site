@@ -2,6 +2,7 @@ package com.teamtreehouse.service;
 
 import com.teamtreehouse.dao.CategoryDao;
 import com.teamtreehouse.domain.Category;
+import com.teamtreehouse.domain.Recipe;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,12 +53,15 @@ public class CategoryServiceTest {
         Category category = new Category();
         category.setId(1L);
         category.setName("test");
+        Recipe recipe = new Recipe();
+        category.addRecipe(recipe);
 
         when(dao.findOne(1L)).thenReturn(category);
         Category result = service.findById(1L);
 
         assertEquals(1, result.getId().intValue());
         assertEquals("test", result.getName());
+        assertEquals(1, result.getRecipes().size());
     }
 
     @Test

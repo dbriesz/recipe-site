@@ -2,18 +2,25 @@ package com.teamtreehouse.service;
 
 import com.teamtreehouse.dao.RecipeDao;
 import com.teamtreehouse.domain.*;
+import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
+import com.teamtreehouse.web.exceptions.SearchTermNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.times;
@@ -81,6 +88,20 @@ public class RecipeServiceTest {
     }
 
     @Test
+    public void findByUser_ShouldReturnOne() throws Exception {
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
+
+        when(dao.findByUser()).thenReturn(recipes);
+
+        assertEquals("findByUser should return one recipe", 2, service.findByUser().size());
+        verify(dao).findByUser();
+    }
+
+    @Test
     public void saveRecipeTest() throws Exception {
         List<Ingredient> ingredients = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
@@ -103,6 +124,7 @@ public class RecipeServiceTest {
         assertEquals(1, result.getInstructions().size());
         assertEquals("Test PrepTime 1", result.getPrepTime());
         assertEquals("Test CookTime 1", result.getCookTime());
+        verify(dao).findOne(1L);
     }
 
     @Test
@@ -115,5 +137,23 @@ public class RecipeServiceTest {
         when(dao.findOne(1L)).thenReturn(recipe);
         service.delete(recipe);
         verify(dao, times(1)).delete(recipe);
+    }
+
+    @Test
+    public void categoryNotFoundExceptionTest() throws Exception {
+        try {
+            service.findByCategoryName("test");
+        } catch (CategoryNotFoundException ex) {
+            assertThat(ex.getMessage(), is("Sorry, no such category exists. Please try again."));
+        }
+    }
+
+    @Test
+    public void searchTermNotFoundExceptionTest() throws Exception {
+        try {
+            service.findByDescriptionContaining("test");
+        } catch (SearchTermNotFoundException ex) {
+            assertThat(ex.getMessage(), is("Sorry, no recipes found. Please try again."));
+        }
     }
 }

@@ -26,7 +26,7 @@ public class Instruction extends BaseEntity {
         this.description = description;
     }
 
-    @Override
+/*    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -39,5 +39,5 @@ public class Instruction extends BaseEntity {
     @Override
     public int hashCode() {
         return description != null ? description.hashCode() : 0;
-    }
+    }*/
 }

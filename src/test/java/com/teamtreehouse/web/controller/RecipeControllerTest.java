@@ -6,7 +6,6 @@ import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import com.teamtreehouse.web.exceptions.SearchTermNotFoundException;
 import org.hamcrest.Matchers;
 import org.hamcrest.beans.HasPropertyWithValue;
-import org.hamcrest.collection.IsCollectionWithSize;
 import org.hamcrest.collection.IsEmptyCollection;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +18,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.verify;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
