@@ -45,4 +45,11 @@ public class UserServiceTest {
         assertThat(service.findByUsername("TestUser"), instanceOf(User.class));
         verify(dao).findByUsername("TestUser");
     }
+
+    @Test
+    public void findById_ShouldReturnOne() throws Exception {
+        when(dao.findOne(1L)).thenReturn(new User());
+        assertThat(service.findById(1L), instanceOf(User.class));
+        verify(dao).findOne(1L);
+    }
 }

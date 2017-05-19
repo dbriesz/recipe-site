@@ -54,6 +54,7 @@ public class RecipeServiceTest {
     @Test
     public void findById_ShouldReturnOne() throws Exception {
         when(dao.findOne(1L)).thenReturn(new Recipe());
+
         assertThat(service.findById(1L), instanceOf(Recipe.class));
         verify(dao).findOne(1L);
     }
@@ -64,5 +65,14 @@ public class RecipeServiceTest {
 
         assertEquals("findByCategoryName should return two recipes", 2, service.findByCategoryName("test").size());
         verify(dao).findByCategoryName("test");
+    }
+
+    @Test
+    public void findBySearchTerm_ShouldReturnTwo() throws Exception {
+        when(dao.findByDescriptionContaining("TestDesc")).thenReturn(recipes);
+
+        assertEquals("findByDescriptionContaining should return one recipe",
+                2, service.findByDescriptionContaining("TestDesc").size());
+        verify(dao).findByDescriptionContaining("TestDesc");
     }
 }

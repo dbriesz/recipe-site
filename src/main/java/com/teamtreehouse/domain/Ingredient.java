@@ -53,11 +53,16 @@ public class Ingredient extends BaseEntity {
 
         Ingredient that = (Ingredient) o;
 
-        return name != null ? name.equals(that.name) : that.name == null;
+        if (quantity != that.quantity) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        return measurement != null ? measurement.equals(that.measurement) : that.measurement == null;
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (measurement != null ? measurement.hashCode() : 0);
+        result = 31 * result + quantity;
+        return result;
     }
 }
