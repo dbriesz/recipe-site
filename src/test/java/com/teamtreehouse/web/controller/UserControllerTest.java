@@ -20,6 +20,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
+import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -94,7 +97,8 @@ public class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/users/add").with(user("user1")))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login"));
+                .andExpect(redirectedUrl("/login"))
+                .andExpect(flash().attribute("flash", hasProperty("status", equalTo(SUCCESS))));
     }
 
     private User userBuilder() {

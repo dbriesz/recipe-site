@@ -76,8 +76,8 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
-    public boolean hasAdminRole() {
+/*    public boolean hasAdminRole() {
         List<String> roles = Arrays.asList(getRoles());
         return roles.contains("ROLE_ADMIN");
-    }
+    }*/
 }

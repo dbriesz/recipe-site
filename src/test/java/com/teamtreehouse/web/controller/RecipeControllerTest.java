@@ -5,12 +5,15 @@ import com.teamtreehouse.service.*;
 import com.teamtreehouse.web.exceptions.CategoryNotFoundException;
 import com.teamtreehouse.web.exceptions.SearchTermNotFoundException;
 import org.hamcrest.Matchers;
+import org.hamcrest.beans.HasPropertyWithValue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static com.teamtreehouse.web.FlashMessage.Status.FAILURE;
+import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -88,6 +91,7 @@ public class RecipeControllerTest {
         when(categoryService.findAll()).thenReturn(categories);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/").with(user("user1")))
+            .andExpect(model().attribute("recipes", recipes))
             .andExpect(status().isOk())
             .andExpect(view().name("index"));
     }
@@ -105,6 +109,7 @@ public class RecipeControllerTest {
         when(recipeService.findById(1L)).thenReturn(recipe);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/1").with(user("user1")))
+            .andExpect(model().attribute("recipe", recipe))
             .andExpect(status().isOk())
             .andExpect(view().name("detail"));
     }
@@ -157,6 +162,10 @@ public class RecipeControllerTest {
         when(instructionService.findAll()).thenReturn(instructions);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/1/edit").with(user("user1")))
+            .andExpect(model().attribute("recipe", recipe))
+            .andExpect(model().attribute("categories", categories))
+            .andExpect(model().attribute("ingredients", ingredients))
+            .andExpect(model().attribute("instructions", instructions))
             .andExpect(status().isOk())
             .andExpect(view().name("edit"));
     }
@@ -187,7 +196,8 @@ public class RecipeControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/delete").with(user("user1")))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/"));
+                .andExpect(redirectedUrl("/"))
+                .andExpect(flash().attribute("flash", HasPropertyWithValue.hasProperty("status", Matchers.equalTo(SUCCESS))));
     }
 
     @Test
