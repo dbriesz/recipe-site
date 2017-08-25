@@ -21,7 +21,7 @@
           </div>
         </div> <div class="clear"></div>
 
-        <div style="overflow: hidden; white-space: nowrap; display: flex" th:each="recipe : ${recipes}" class="grid-100 row addHover">
+        <div style="display: flex" th:each="recipe : ${recipes}" class="grid-100 row addHover">
           <form th:action="@{|/recipes/${recipe.id}/favorite|}" method="post">
             <button style="display: inline; background: transparent; color: #808080; margin-right: 5px" type="submit">
               <img th:src="${recipe.isFavorited(currentUser)} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="12px"/>

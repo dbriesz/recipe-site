@@ -207,9 +207,17 @@ public class RecipeController {
                     new FlashMessage("Invalid input. Ingredient quantity must be a number. Please try again.", FlashMessage.Status.FAILURE));
             return String.format("redirect:/recipes/%s/edit", recipe.getId());
         } else {
+            Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) o;
+            User user = userService.findByUsername(principal.getUsername());
+            List<Recipe> userOwnedRecipes = recipeService.findByUser(user.getId());
             recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
             recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
+            if (userOwnedRecipes.contains(recipe)) {
+                recipe.setUser(user);
+            }
             recipeService.save(recipe);
+            userService.save(user);
             redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe updated!", FlashMessage.Status.SUCCESS));
 
             // Redirect browser to recipe detail page
