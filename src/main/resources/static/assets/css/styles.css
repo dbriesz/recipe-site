@@ -96,7 +96,7 @@ button {
   opacity: 0;
   transition: all ease-in-out 0.3s; }
   .addHover .hoverBlock a {
-    margin-left: 400px; }
+    margin-left: 12px; }
     .addHover .hoverBlock a:last-child {
       margin-right: 0; }
 .addHover:hover .hoverBlock {
@@ -122,6 +122,10 @@ button {
 
 .flash.info {
   background: #eca73f;
+}
+.hoverBlock {
+  float: right;
+  margin-left: auto;
 }
 
 /*# sourceMappingURL=styles.css.map */
