@@ -111,7 +111,7 @@ public class UserController {
         // Get the user owned recipes by id
         addCurrentLoggedInUserToModel(model);
         User currentUser = getUserByPrincipal();
-        List<Recipe> recipes = recipeService.findByUser(currentUser.getId());
+        List<Recipe> recipes = currentUser.getCreatedRecipes();
         model.addAttribute("recipes", recipes);
 
         return "profile";

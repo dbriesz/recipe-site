@@ -207,7 +207,7 @@ public class RecipeController {
 
     // Update an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/edit", method = RequestMethod.POST)
-    public String updateRecipe(Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String updateRecipe(Recipe recipe, RedirectAttributes redirectAttributes) {
         // Update recipe if valid data was received
         Category category = recipe.getCategory();
         if (category != null) {
