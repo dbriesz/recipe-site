@@ -92,6 +92,15 @@ button {
 .add-row {
   margin-bottom: 30px; }
 
+.grid-100 .row .addHover {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%
+}
+.grid-100 .row .addHover a {
+  width: 70%;
+}
+
 .addHover .hoverBlock {
   opacity: 0;
   transition: all ease-in-out 0.3s; }
@@ -124,6 +133,7 @@ button {
   background: #eca73f;
 }
 .hoverBlock {
+  width: 20%;
   float: right;
   margin-left: auto;
 }

@@ -21,30 +21,30 @@
           </div>
         </div> <div class="clear"></div>
 
-        <div style="display: flex; flex-wrap: wrap" th:each="recipe : ${recipes}" class="grid-100 row addHover">
-          <form th:action="@{|/recipes/${recipe.id}/favorite|}" method="post">
+        <div style="display: flex; flex-wrap: wrap; width: 100%" th:each="recipe : ${recipes}" class="grid-100 row addHover">
+          <form style="width: 10%" th:action="@{|/recipes/${recipe.id}/favorite|}" method="post">
             <button style="display: inline; background: transparent; color: #808080; margin-right: 5px" type="submit">
               <img th:src="${recipe.isFavorited(currentUser)} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="12px"/>
             </button>
           </form>
-          <a th:href="@{|/recipes/${recipe.id}/|}">
+          <a style="width: 70%" th:href="@{|/recipes/${recipe.id}/|}">
             <div class="grid-70">
               <p style="display: inline; margin-left: 5%" th:text="${recipe.name}">
                 Recipe Name
               </p>
             </div>
           </a>
-          <div style="margin-left: 300px" class="hoverBlock">
-            <div class="grid-30">
-              <div class="flush-right">
+          <div style="width: 20%" class="hoverBlock">
+            <!--<div class="grid-30">-->
+              <!--<div class="flush-right">-->
                 <div>
                   <a th:href="@{|/recipes/${recipe.id}/edit|}"> <img th:src="@{/assets/images/edit.svg}" height="12px"/> Edit </a>
                 <form style="display: inline" th:action="@{|/recipes/${recipe.id}/delete|}" method="post">
                   <button style="background: transparent; color: #808080; margin-left: 0" type="submit">
                     <img th:src="@{/assets/images/delete.svg}" height="12px"/> Delete </button>
                 </form>
-                </div>
-              </div>
+                <!--</div>-->
+              <!--</div>-->
             </div>
           </div>
         </div> <div class="clear"></div>

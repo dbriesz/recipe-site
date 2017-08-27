@@ -21,11 +21,15 @@ public class User extends BaseEntity {
     private boolean enabled;
     @JsonIgnore
     private String[] roles;
+    @OneToMany
+    private List<Recipe> createdRecipes;
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Recipe> favorites = new ArrayList<>();
+    private List<Recipe> favorites;
 
     public User() {
         super();
+        createdRecipes = new ArrayList<>();
+        favorites = new ArrayList<>();
     }
 
     public User(String username, String password, boolean enabled, String[] roles) {
@@ -34,6 +38,22 @@ public class User extends BaseEntity {
         setPassword(password);
         this.enabled = enabled;
         this.roles = roles;
+    }
+
+    public void addCreatedRecipe (Recipe recipe) {
+        createdRecipes.add(recipe);
+    }
+
+    public void removeCreatedRecipe (Recipe recipe) {
+        createdRecipes.remove(recipe);
+    }
+
+    public List<Recipe> getCreatedRecipes () {
+        return createdRecipes;
+    }
+
+    public void setCreatedRecipes(List<Recipe> createdRecipes) {
+        this.createdRecipes = createdRecipes;
     }
 
     public void addFavorite(Recipe recipe) {
@@ -76,7 +96,17 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
-/*    public boolean hasAdminRole() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return username != null ? username.equals(user.username) : user.username == null;
+    }
+
+    /*    public boolean hasAdminRole() {
         List<String> roles = Arrays.asList(getRoles());
         return roles.contains("ROLE_ADMIN");
     }*/

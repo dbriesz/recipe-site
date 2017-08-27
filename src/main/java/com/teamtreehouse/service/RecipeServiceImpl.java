@@ -39,13 +39,21 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void delete(Recipe recipe) {
+    public boolean delete(Recipe recipe, User currentUser) {
         List<User> users = userService.findAll();
         users.forEach(user -> {
             user.removeFavorite(recipe);
             userService.save(user);
         });
-        recipeDao.delete(recipe);
+        if (recipe.getUser() == currentUser) {
+            recipe.getUser().removeCreatedRecipe(recipe);
+            userService.save(recipe.getUser());
+            recipe.setUser(null);
+            recipeDao.delete(recipe);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override

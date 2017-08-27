@@ -3,7 +3,9 @@ package com.teamtreehouse.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,7 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Recipe extends BaseEntity {
     @NotNull
+    @Size(max = 40)
     private String name;
     private String description;
     @ManyToOne
@@ -120,6 +123,9 @@ public class Recipe extends BaseEntity {
     }
 
     public void setUser(User user) {
+        if (user != null) {
+            user.addCreatedRecipe(this);
+        }
         this.user = user;
     }
 
@@ -130,11 +136,15 @@ public class Recipe extends BaseEntity {
 
         Recipe recipe = (Recipe) o;
 
-        return name != null ? name.equals(recipe.name) : recipe.name == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        if (name != null ? !name.equals(recipe.name) : recipe.name != null) return false;
+        if (description != null ? !description.equals(recipe.description) : recipe.description != null) return false;
+        if (category != null ? !category.equals(recipe.category) : recipe.category != null) return false;
+        if (imageUrl != null ? !imageUrl.equals(recipe.imageUrl) : recipe.imageUrl != null) return false;
+        if (ingredients != null ? !ingredients.equals(recipe.ingredients) : recipe.ingredients != null) return false;
+        if (instructions != null ? !instructions.equals(recipe.instructions) : recipe.instructions != null)
+            return false;
+        if (prepTime != null ? !prepTime.equals(recipe.prepTime) : recipe.prepTime != null) return false;
+        if (cookTime != null ? !cookTime.equals(recipe.cookTime) : recipe.cookTime != null) return false;
+        return user != null ? user.equals(recipe.user) : recipe.user == null;
     }
 }

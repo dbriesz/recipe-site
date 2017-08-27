@@ -22,12 +22,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.teamtreehouse.web.FlashMessage.Status.FAILURE;
+import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
 
 @Controller
 public class RecipeController {
@@ -153,76 +153,75 @@ public class RecipeController {
 
     // Edit an existing recipe
     @RequestMapping("recipes/{recipeId}/edit")
-    public String editRecipe(@PathVariable Long recipeId, Model model, HttpServletRequest request) {
+    public String editRecipe(@PathVariable Long recipeId, Model model, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         // Add model attributes needed for edit form
         Recipe recipe = recipeService.findById(recipeId);
         if (!model.containsAttribute("recipe")) {
             model.addAttribute("recipe", recipe);
         }
-        model.addAttribute("action", String.format("/recipes/%s/edit", recipeId));
-        model.addAttribute("heading", "Recipe Editor");
-        List<Category> categories = categoryService.findAll();
-        model.addAttribute("categories", categories);
-        model.addAttribute("ingredients", ingredientService.findAll());
-        model.addAttribute("instructions", instructionService.findAll());
-        model.addAttribute("cancelRedirect", String.format("%s", request.getHeader("referer")));
-        addCurrentLoggedInUserToModel(model);
+        if (getCurrentLoggedInUser() == recipe.getUser()) {
+            model.addAttribute("action", String.format("/recipes/%s/edit", recipeId));
+            model.addAttribute("heading", "Recipe Editor");
+            List<Category> categories = categoryService.findAll();
+            model.addAttribute("categories", categories);
+            model.addAttribute("ingredients", ingredientService.findAll());
+            model.addAttribute("instructions", instructionService.findAll());
+            model.addAttribute("cancelRedirect", String.format("%s", request.getHeader("referer")));
+            addCurrentLoggedInUserToModel(model);
 
-        return "edit";
+            return "edit";
+        } else {
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("Sorry, you can only edit recipes that you created", FlashMessage.Status.FAILURE));
+            return String.format("redirect:%s", request.getHeader("referer"));
+        }
     }
 
     // Add a recipe
     @RequestMapping(value = "recipes/add", method = RequestMethod.POST)
-    public String addRecipe(@Valid Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String addRecipe(Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
         // Add recipe if valid data was received
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
                     new FlashMessage("Invalid input. Ingredient quantity must be a number. Please try again.", FlashMessage.Status.FAILURE));
             return "redirect:/recipes/add";
         } else {
-            Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) o;
-            User user = userService.findByUsername(principal.getUsername());
-            recipe.setUser(user);
+            User user = getCurrentLoggedInUser();
             recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
             recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
+            recipe.setUser(user);
             recipeService.save(recipe);
-            redirectAttributes.addFlashAttribute("flash", new FlashMessage("New recipe added!", FlashMessage.Status.SUCCESS));
+            userService.save(user);
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("New recipe added!", SUCCESS));
         }
 
         // Redirect browser to home page
         return "redirect:/";
     }
 
+    private User getCurrentLoggedInUser() {
+        Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) o;
+        return userService.findByUsername(principal.getUsername());
+    }
+
     // Update an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/edit", method = RequestMethod.POST)
-    public String updateRecipe(@Valid Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String updateRecipe(Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
         // Update recipe if valid data was received
         Category category = recipe.getCategory();
         if (category != null) {
             recipe.setCategory(category);
         }
-        if (result.hasErrors()) {
-            redirectAttributes.addFlashAttribute("flash",
-                    new FlashMessage("Invalid input. Ingredient quantity must be a number. Please try again.", FlashMessage.Status.FAILURE));
-            return String.format("redirect:/recipes/%s/edit", recipe.getId());
-        } else {
-            Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) o;
-            User user = userService.findByUsername(principal.getUsername());
-            List<Recipe> userOwnedRecipes = recipeService.findByUser(user.getId());
-            recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
-            recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
-            if (userOwnedRecipes.contains(recipe)) {
-                recipe.setUser(user);
-            }
-            recipeService.save(recipe);
-            userService.save(user);
-            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe updated!", FlashMessage.Status.SUCCESS));
+        User currentUser = getCurrentLoggedInUser();
+        recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
+        recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
+        recipeService.save(recipe);
+        userService.save(currentUser);
+        redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe updated successfully!", SUCCESS));
 
-            // Redirect browser to recipe detail page
-            return String.format("redirect:/recipes/%s", recipe.getId());
-        }
+        // Redirect browser to recipe detail page
+        return String.format("redirect:/recipes/%s", recipe.getId());
     }
 
     // Delete an existing recipe
@@ -230,9 +229,12 @@ public class RecipeController {
     public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
-
-        recipeService.delete(recipe);
-        redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted!", FlashMessage.Status.SUCCESS));
+        User currentUser = getCurrentLoggedInUser();
+        if (recipeService.delete(recipe, currentUser)) {
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted successfully!", SUCCESS));
+        } else {
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Sorry, you can only delete recipes that you created", FAILURE));
+        }
 
         // Redirect browser to home page
         return "redirect:/";
@@ -243,16 +245,14 @@ public class RecipeController {
     public String toggleFavorite(@PathVariable Long recipeId, HttpServletRequest request,
                                  RedirectAttributes redirectAttributes, Model model) {
         Recipe recipe = recipeService.findById(recipeId);
-        Object o = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        org.springframework.security.core.userdetails.User principal = (org.springframework.security.core.userdetails.User) o;
-        User user = userService.findByUsername(principal.getUsername());
+        User user = getCurrentLoggedInUser();
         addCurrentLoggedInUserToModel(model);
         if (recipe.isFavorited(user)) {
             user.removeFavorite(recipe);
-            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe removed from favorites!", FlashMessage.Status.SUCCESS));
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe removed from favorites!", SUCCESS));
         } else {
             user.addFavorite(recipe);
-            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe added to favorites!", FlashMessage.Status.SUCCESS));
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe added to favorites!", SUCCESS));
         }
         userService.save(user);
 
