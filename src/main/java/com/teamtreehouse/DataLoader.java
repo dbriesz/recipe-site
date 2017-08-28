@@ -99,6 +99,7 @@ public class DataLoader implements ApplicationRunner {
             }
             count++;
             recipeService.save(recipe);
+            user1.addCreatedRecipe(recipe);
             userService.save(user1);
         }
 
@@ -160,6 +161,7 @@ public class DataLoader implements ApplicationRunner {
             }
             num++;
             recipeService.save(recipe2);
+            user2.addCreatedRecipe(recipe2);
             userService.save(user2);
         }
 

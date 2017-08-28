@@ -2,6 +2,8 @@ package com.teamtreehouse.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -22,6 +24,7 @@ public class User extends BaseEntity {
     @JsonIgnore
     private String[] roles;
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private List<Recipe> createdRecipes;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Recipe> favorites;

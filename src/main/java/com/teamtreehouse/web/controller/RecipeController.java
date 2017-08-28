@@ -187,6 +187,10 @@ public class RecipeController {
                     new FlashMessage("Invalid input. Ingredient quantity must be a number. Please try again.", FlashMessage.Status.FAILURE));
             return "redirect:/recipes/add";
         } else {
+            Category category = recipe.getCategory();
+            if (category != null) {
+                recipe.setCategory(category);
+            }
             User user = getCurrentLoggedInUser();
             recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
             recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
