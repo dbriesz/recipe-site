@@ -153,9 +153,12 @@ public class RecipeController {
 
     // Edit an existing recipe
     @RequestMapping("recipes/{recipeId}/edit")
-    public String editRecipe(@PathVariable Long recipeId, Model model, HttpServletRequest request) {
+    public String editRecipe(@PathVariable Long recipeId, Model model, HttpServletRequest request, Principal principal) {
         // Add model attributes needed for edit form
         Recipe recipe = recipeService.findById(recipeId);
+        if (!recipe.getUser().getUsername().equals(principal.getName())) {
+            return "redirect:/";
+        }
         if (!model.containsAttribute("recipe")) {
             model.addAttribute("recipe", recipe);
         }
@@ -219,9 +222,13 @@ public class RecipeController {
 
     // Delete an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/delete", method = RequestMethod.POST)
-    public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes) {
+    public String deleteRecipe(@PathVariable Long recipeId, Principal principal, RedirectAttributes redirectAttributes) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
+
+        if (!recipe.getUser().getUsername().equals(principal.getName())) {
+            return "redirect:/";
+        }
 
         recipeService.delete(recipe);
         redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted!", FlashMessage.Status.SUCCESS));
