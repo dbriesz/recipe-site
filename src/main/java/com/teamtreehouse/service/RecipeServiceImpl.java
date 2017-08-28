@@ -45,9 +45,6 @@ public class RecipeServiceImpl implements RecipeService {
             user.removeFavorite(recipe);
             userService.save(user);
         });
-        recipe.getUser().removeCreatedRecipe(recipe);
-        userService.save(recipe.getUser());
-        recipe.setUser(null);
         recipeDao.delete(recipe);
     }
 
