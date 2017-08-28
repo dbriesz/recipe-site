@@ -128,7 +128,7 @@ public class Recipe extends BaseEntity {
         this.user = user;
     }
 
-/*    @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -136,14 +136,13 @@ public class Recipe extends BaseEntity {
         Recipe recipe = (Recipe) o;
 
         if (name != null ? !name.equals(recipe.name) : recipe.name != null) return false;
-        if (description != null ? !description.equals(recipe.description) : recipe.description != null) return false;
-        if (category != null ? !category.equals(recipe.category) : recipe.category != null) return false;
-        if (imageUrl != null ? !imageUrl.equals(recipe.imageUrl) : recipe.imageUrl != null) return false;
-        if (ingredients != null ? !ingredients.equals(recipe.ingredients) : recipe.ingredients != null) return false;
-        if (instructions != null ? !instructions.equals(recipe.instructions) : recipe.instructions != null)
-            return false;
-        if (prepTime != null ? !prepTime.equals(recipe.prepTime) : recipe.prepTime != null) return false;
-        if (cookTime != null ? !cookTime.equals(recipe.cookTime) : recipe.cookTime != null) return false;
         return user != null ? user.equals(recipe.user) : recipe.user == null;
-    }*/
+    }
+
+    @Override
+    public int hashCode() {
+        int result = name != null ? name.hashCode() : 0;
+        result = 31 * result + (user != null ? user.hashCode() : 0);
+        return result;
+    }
 }

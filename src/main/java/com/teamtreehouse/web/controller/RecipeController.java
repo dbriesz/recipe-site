@@ -22,6 +22,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
@@ -179,7 +180,7 @@ public class RecipeController {
 
     // Add a recipe
     @RequestMapping(value = "recipes/add", method = RequestMethod.POST)
-    public String addRecipe(Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
+    public String addRecipe(@Valid Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes) {
         // Add recipe if valid data was received
         if (result.hasErrors()) {
             redirectAttributes.addFlashAttribute("flash",
@@ -208,7 +209,7 @@ public class RecipeController {
 
     // Update an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/edit", method = RequestMethod.POST)
-    public String updateRecipe(Recipe recipe, RedirectAttributes redirectAttributes) {
+    public String updateRecipe(@Valid Recipe recipe, RedirectAttributes redirectAttributes) {
         // Update recipe if valid data was received
         Category category = recipe.getCategory();
         if (category != null) {
@@ -217,6 +218,7 @@ public class RecipeController {
         User currentUser = getCurrentLoggedInUser();
         recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
         recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
+        recipe.setUser(recipe.getUser());
         recipeService.save(recipe);
         userService.save(currentUser);
         redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe updated successfully!", SUCCESS));

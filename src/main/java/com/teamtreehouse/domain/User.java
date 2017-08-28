@@ -21,7 +21,7 @@ public class User extends BaseEntity {
     private boolean enabled;
     @JsonIgnore
     private String[] roles;
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     private List<Recipe> createdRecipes;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Recipe> favorites;
@@ -50,10 +50,6 @@ public class User extends BaseEntity {
 
     public List<Recipe> getCreatedRecipes () {
         return createdRecipes;
-    }
-
-    public void setCreatedRecipes(List<Recipe> createdRecipes) {
-        this.createdRecipes = createdRecipes;
     }
 
     public void addFavorite(Recipe recipe) {
@@ -96,7 +92,7 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
-    /*@Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -104,10 +100,10 @@ public class User extends BaseEntity {
         User user = (User) o;
 
         return username != null ? username.equals(user.username) : user.username == null;
-    }*/
+    }
 
-    /*    public boolean hasAdminRole() {
-        List<String> roles = Arrays.asList(getRoles());
-        return roles.contains("ROLE_ADMIN");
-    }*/
+    @Override
+    public int hashCode() {
+        return username != null ? username.hashCode() : 0;
+    }
 }
