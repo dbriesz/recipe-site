@@ -122,9 +122,6 @@ public class Recipe extends BaseEntity {
     }
 
     public void setUser(User user) {
-        if (user != null) {
-            user.addCreatedRecipe(this);
-        }
         this.user = user;
     }
 
