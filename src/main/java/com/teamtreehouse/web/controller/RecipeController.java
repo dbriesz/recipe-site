@@ -159,7 +159,7 @@ public class RecipeController {
         if (!model.containsAttribute("recipe")) {
             model.addAttribute("recipe", recipe);
         }
-        if (getCurrentLoggedInUser() == recipe.getUser()) {
+        if (getCurrentLoggedInUser().getUsername().equals(recipe.getUser().getUsername())) {
             model.addAttribute("action", String.format("/recipes/%s/edit", recipeId));
             model.addAttribute("heading", "Recipe Editor");
             List<Category> categories = categoryService.findAll();
@@ -191,6 +191,7 @@ public class RecipeController {
             recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
             recipe.setUser(user);
             recipeService.save(recipe);
+            user.addCreatedRecipe(recipe);
             userService.save(user);
             redirectAttributes.addFlashAttribute("flash", new FlashMessage("New recipe added!", SUCCESS));
         }
@@ -229,8 +230,8 @@ public class RecipeController {
     public String deleteRecipe(@PathVariable Long recipeId, RedirectAttributes redirectAttributes) {
         // Delete recipe whose id is recipeId
         Recipe recipe = recipeService.findById(recipeId);
-        User currentUser = getCurrentLoggedInUser();
-        if (recipeService.delete(recipe, currentUser)) {
+        if (getCurrentLoggedInUser().getUsername().equals(recipe.getUser().getUsername())) {
+            recipeService.delete(recipe);
             redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe deleted successfully!", SUCCESS));
         } else {
             redirectAttributes.addFlashAttribute("flash", new FlashMessage("Sorry, you can only delete recipes that you created", FAILURE));

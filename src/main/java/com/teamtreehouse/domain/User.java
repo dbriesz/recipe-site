@@ -21,7 +21,7 @@ public class User extends BaseEntity {
     private boolean enabled;
     @JsonIgnore
     private String[] roles;
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Recipe> createdRecipes;
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Recipe> favorites;

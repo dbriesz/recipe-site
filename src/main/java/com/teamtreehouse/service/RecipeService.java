@@ -10,7 +10,7 @@ public interface RecipeService {
     List<Recipe> findByUser(Long id);
     Recipe findById(Long id);
     void save(Recipe recipe);
-    boolean delete(Recipe recipe, User user);
+    void delete(Recipe recipe);
     List<Recipe> findByCategoryName(String categoryName);
     List<Recipe> findByDescriptionContaining(String searchTerm);
 }
