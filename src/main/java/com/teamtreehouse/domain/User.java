@@ -96,7 +96,7 @@ public class User extends BaseEntity {
         this.roles = roles;
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -104,7 +104,7 @@ public class User extends BaseEntity {
         User user = (User) o;
 
         return username != null ? username.equals(user.username) : user.username == null;
-    }
+    }*/
 
     /*    public boolean hasAdminRole() {
         List<String> roles = Arrays.asList(getRoles());

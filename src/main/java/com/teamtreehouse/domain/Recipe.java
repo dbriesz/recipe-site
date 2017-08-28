@@ -3,7 +3,6 @@ package com.teamtreehouse.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
@@ -129,7 +128,7 @@ public class Recipe extends BaseEntity {
         this.user = user;
     }
 
-    @Override
+/*    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -146,5 +145,5 @@ public class Recipe extends BaseEntity {
         if (prepTime != null ? !prepTime.equals(recipe.prepTime) : recipe.prepTime != null) return false;
         if (cookTime != null ? !cookTime.equals(recipe.cookTime) : recipe.cookTime != null) return false;
         return user != null ? user.equals(recipe.user) : recipe.user == null;
-    }
+    }*/
 }
