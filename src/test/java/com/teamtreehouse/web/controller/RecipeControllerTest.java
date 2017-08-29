@@ -14,7 +14,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
-import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
@@ -62,11 +61,19 @@ public class RecipeControllerTest {
     private RecipeController recipeController;
     private MockMvc mockMvc;
 
+    private Recipe recipe;
+    private User user;
+
     @Before
     public void setup() throws Exception {
         InternalResourceViewResolver viewResolver = new InternalResourceViewResolver();
         viewResolver.setPrefix("classpath:/templates/");
         viewResolver.setSuffix(".html");
+
+        recipe = recipeBuilder();
+        user = userBuilder();
+        recipe.setUser(user);
+
         mockMvc = MockMvcBuilders.standaloneSetup(recipeController)
                 .setViewResolvers(viewResolver)
                 .addFilter(new SecurityContextPersistenceFilter())
@@ -76,13 +83,7 @@ public class RecipeControllerTest {
     @Test
     public void getIndex() throws Exception {
         List<Category> categories = new ArrayList<>();
-        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, "user1");
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(auth);
 
-        Recipe recipe = recipeBuilder();
         Recipe recipe2 = recipeBuilder();
 
         List<Recipe> recipes = new ArrayList<>();
@@ -101,13 +102,6 @@ public class RecipeControllerTest {
 
     @Test
     public void getRecipeDetail() throws Exception {
-        Recipe recipe = recipeBuilder();
-        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, "user1");
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(auth);
-
         when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findById(1L)).thenReturn(recipe);
 
@@ -131,13 +125,6 @@ public class RecipeControllerTest {
 
     @Test
     public void addNewRecipeTest() throws Exception {
-        Recipe recipe = recipeBuilder();
-        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, "user1");
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(auth);
-
         when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findById(1L)).thenReturn(recipe);
 
@@ -150,19 +137,13 @@ public class RecipeControllerTest {
         List<Category> categories = new ArrayList<>();
         List<Ingredient> ingredients = new ArrayList<>();
         List<Instruction> instructions = new ArrayList<>();
-        Recipe recipe = recipeBuilder();
+        recipe.setUser(user);
 
-        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, "user1");
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(auth);
-
-        when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findById(1L)).thenReturn(recipe);
         when(categoryService.findAll()).thenReturn(categories);
         when(ingredientService.findAll()).thenReturn(ingredients);
         when(instructionService.findAll()).thenReturn(instructions);
+        when(userService.findByUsername("user1")).thenReturn(user);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/recipes/1/edit").with(user("user1")))
             .andExpect(model().attribute("recipe", recipe))
@@ -175,9 +156,10 @@ public class RecipeControllerTest {
 
     @Test
     public void updateRecipeTest() throws Exception {
-        Recipe recipe = recipeBuilder();
+        recipe.setUser(user);
 
         when(recipeService.findById(1L)).thenReturn(recipe);
+        when(userService.findByUsername("user1")).thenReturn(user);
         recipe.addIngredient(new Ingredient("TestIngredient 2", "TestMeasurement 2", 1));
         recipe.addInstruction(new Instruction("TestDesc 2"));
         recipe.setName("TestName2");
@@ -186,6 +168,9 @@ public class RecipeControllerTest {
         recipe.setCookTime("30 minutes");
         recipe.setPrepTime("20 minutes");
         recipe.setImageUrl("TestUrl2");
+        recipeService.save(recipe);
+        user.addCreatedRecipe(recipe);
+        userService.save(user);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/edit").with(user("user1")))
                 .andExpect(status().is3xxRedirection());
@@ -193,10 +178,10 @@ public class RecipeControllerTest {
 
     @Test
     public void deleteRecipeTest() throws Exception {
-        Recipe recipe = recipeBuilder();
+        recipe.setUser(user);
 
         when(recipeService.findById(1L)).thenReturn(recipe);
-
+        when(userService.findByUsername("user1")).thenReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/delete").with(user("user1")))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/"))
@@ -205,12 +190,6 @@ public class RecipeControllerTest {
 
     @Test
     public void deletingRecipeRemovesFavorite() throws Exception {
-        Recipe recipe = recipeBuilder();
-        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
-        Authentication auth = new UsernamePasswordAuthenticationToken(
-                user, "user1");
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        securityContext.setAuthentication(auth);
         List<Recipe> favorites = user.getFavorites();
 
         when(userService.findByUsername("user1")).thenReturn(user);
@@ -224,10 +203,7 @@ public class RecipeControllerTest {
     @Test
     public void categoryFoundTest() throws Exception {
         List<Recipe> recipes = new ArrayList<>();
-        Recipe recipe = recipeBuilder();
         recipes.add(recipe);
-        User user = new User();
-        user.setUsername("user1");
 
         when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findByCategoryName("TestCategory")).thenReturn(recipes);
@@ -242,10 +218,7 @@ public class RecipeControllerTest {
     @Test
     public void searchTermFoundTest() throws Exception {
         List<Recipe> recipes = new ArrayList<>();
-        Recipe recipe = recipeBuilder();
         recipes.add(recipe);
-        User user = new User();
-        user.setUsername("user1");
 
         when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findByDescriptionContaining("TestDesc")).thenReturn(recipes);
@@ -260,11 +233,7 @@ public class RecipeControllerTest {
     @Test
     public void markFavoriteTest() throws Exception {
         List<Recipe> recipes = new ArrayList<>();
-        Recipe recipe = new Recipe();
-        recipe.setId(1L);
         recipes.add(recipe);
-        User user = new User();
-        user.setUsername("user1");
 
         when(userService.findByUsername("user1")).thenReturn(user);
         when(recipeService.findById(1L)).thenReturn(recipe);
@@ -277,11 +246,8 @@ public class RecipeControllerTest {
     @Test
     public void unMarkFavoriteTest() throws Exception {
         List<Recipe> recipes = new ArrayList<>();
-        Recipe recipe = new Recipe();
-        recipe.setId(1L);
         recipes.add(recipe);
-        User user = new User();
-        user.setUsername("user1");
+        recipes.add(recipe);
         user.addFavorite(recipe);
 
         when(userService.findByUsername("user1")).thenReturn(user);
@@ -318,7 +284,6 @@ public class RecipeControllerTest {
 
     @Test
     public void ingredientsSavedWhenRecipeSaved() throws Exception {
-        Recipe recipe = recipeBuilder();
         List<Ingredient> ingredients = recipe.getIngredients();
 
         when(ingredientService.findAll()).thenReturn(ingredients);
@@ -334,7 +299,6 @@ public class RecipeControllerTest {
 
     @Test
     public void instructionsSavedWhenRecipeSaved() throws Exception {
-        Recipe recipe = recipeBuilder();
         List<Instruction> instructions = recipe.getInstructions();
 
         when(instructionService.findAll()).thenReturn(instructions);
@@ -350,7 +314,7 @@ public class RecipeControllerTest {
 
     private Recipe recipeBuilder() {
         Recipe recipe = new Recipe();
-        User user = new User();
+        User user = userBuilder();
         recipe.setId(1L);
         recipe.setName("TestName");
         recipe.setDescription("TestDesc");
@@ -362,5 +326,16 @@ public class RecipeControllerTest {
         recipe.setCookTime("1 hour");
         recipe.isFavorited(user);
         return recipe;
+    }
+
+    private User userBuilder() {
+        User user = new User("user1", "password", true, new String[]{"ROLE_USER"});
+        Authentication auth = new UsernamePasswordAuthenticationToken(
+                user, "user1");
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        securityContext.setAuthentication(auth);
+        user.setId(1L);
+        userService.save(user);
+        return user;
     }
 }
