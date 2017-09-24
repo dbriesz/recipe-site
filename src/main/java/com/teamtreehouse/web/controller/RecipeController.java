@@ -213,22 +213,28 @@ public class RecipeController {
 
     // Update an existing recipe
     @RequestMapping(value = "recipes/{recipeId}/edit", method = RequestMethod.POST)
-    public String updateRecipe(@Valid Recipe recipe, RedirectAttributes redirectAttributes) {
+    public String updateRecipe(@Valid Recipe recipe, BindingResult result, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         // Update recipe if valid data was received
         Category category = recipe.getCategory();
         if (category != null) {
             recipe.setCategory(category);
         }
-        User currentUser = getCurrentLoggedInUser();
-        recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
-        recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
-        recipe.setUser(currentUser);
-        recipeService.save(recipe);
-        userService.save(currentUser);
-        redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe updated successfully!", SUCCESS));
+/*        if (result.hasErrors()) {
+            redirectAttributes.addFlashAttribute("flash",
+                    new FlashMessage("Invalid input. Please try again.", FlashMessage.Status.FAILURE));
+            return String.format("redirect:%s", request.getHeader("referer"));
+        } else {*/
+            User currentUser = getCurrentLoggedInUser();
+            recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
+            recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
+            recipe.setUser(currentUser);
+            recipeService.save(recipe);
+            userService.save(currentUser);
+            redirectAttributes.addFlashAttribute("flash", new FlashMessage("Recipe updated successfully!", SUCCESS));
 
-        // Redirect browser to recipe detail page
-        return String.format("redirect:/recipes/%s", recipe.getId());
+            // Redirect browser to recipe detail page
+            return String.format("redirect:/recipes/%s", recipe.getId());
+//        }
     }
 
     // Delete an existing recipe

@@ -165,19 +165,21 @@ public class DataLoader implements ApplicationRunner {
             userService.save(user2);
         }
 
-/*
-        List<User> users = Arrays.asList(
-               new User("user1", "password", true, new String[] {"ROLE_USER", "ROLE_ADMIN}),
-               new User("user2", "password", true, new String[] {"ROLE_USER"})
-        );
-
-        String[] categories = {
+/*        String[] categories = {
                 "Breakfast",
                 "Lunch",
                 "Dinner",
                 "Snack",
                 "Appetizer"
         };
+
+        List<Category> categoryList = new ArrayList<>();
+        IntStream.range(0, 5)
+                .forEach(i -> {
+                    Category c = new Category();
+                    c.setName(categories[i]);
+                    categoryService.save(c)
+                });
 
         String[] recipeNames = {
                 "Stew",
@@ -200,7 +202,22 @@ public class DataLoader implements ApplicationRunner {
                 "Sugar",
                 "Salt",
                 "Eggs",
-                "Milk"
+                "Milk",
+                "Pepper",
+                "Water",
+                "Vegetable Oil",
+                "Onion",
+                "Garlic",
+                "Basil",
+                "Tomatoes",
+                "Mushrooms",
+                "Tofu",
+                "Kale",
+                "Cilantro",
+                "Green Bell Peppers",
+                "",
+                "",
+                ""
         };
 
         String[] instructions = {
@@ -214,12 +231,17 @@ public class DataLoader implements ApplicationRunner {
         List<Recipe> recipes = new ArrayList<>();
         IntStream.range(0, 10)
                 .forEach(i -> {
-                    String ingredient = ingredients[i % ingredients.length];
-                    String instruction = instructions[i % instructions.length];
-                    String category = categories[i % categories.length];
-                    Category c = new Category();
-                    c.setName(String.format());
-                    Recipe r = new Recipe();
+                Recipe r = new Recipe();
+                r.setCategory(categoryList.get(i));
+                Ingredient ingredient = new Ingredient();
+                Ingredient ingredient2 = new Ingredient();
+
+                String ingredient = ingredients[i];
+                String instruction = instructions[i % instructions.length];
+                String category = categories[i % categories.length];
+                Category c = new Category();
+                c.setName(String.format());
+
 
 
                 });*/

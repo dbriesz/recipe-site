@@ -11,7 +11,7 @@ import java.util.List;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Recipe extends BaseEntity {
-    @NotNull
+    @NotNull(message = "Recipe name must not be blank")
     @Size(max = 40)
     private String name;
     private String description;

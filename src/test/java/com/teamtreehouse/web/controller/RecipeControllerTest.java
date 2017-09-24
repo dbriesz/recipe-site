@@ -13,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
+import static com.teamtreehouse.web.FlashMessage.Status.FAILURE;
 import static com.teamtreehouse.web.FlashMessage.Status.SUCCESS;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -156,10 +157,9 @@ public class RecipeControllerTest {
 
     @Test
     public void updateRecipeTest() throws Exception {
-        recipe.setUser(user);
-
-        when(recipeService.findById(1L)).thenReturn(recipe);
-        when(userService.findByUsername("user1")).thenReturn(user);
+        List<Category> categories = new ArrayList<>();
+        List<Ingredient> ingredients = new ArrayList<>();
+        List<Instruction> instructions = new ArrayList<>();
         recipe.addIngredient(new Ingredient("TestIngredient 2", "TestMeasurement 2", 1));
         recipe.addInstruction(new Instruction("TestDesc 2"));
         recipe.setName("TestName2");
@@ -168,12 +168,19 @@ public class RecipeControllerTest {
         recipe.setCookTime("30 minutes");
         recipe.setPrepTime("20 minutes");
         recipe.setImageUrl("TestUrl2");
-        recipeService.save(recipe);
-        user.addCreatedRecipe(recipe);
-        userService.save(user);
+        recipe.getIngredients().forEach(ingredient -> ingredientService.save(ingredient));
+        recipe.getInstructions().forEach(instruction -> instructionService.save(instruction));
+        recipe.setUser(user);
+
+        when(categoryService.findAll()).thenReturn(categories);
+        when(ingredientService.findAll()).thenReturn(ingredients);
+        when(instructionService.findAll()).thenReturn(instructions);
+        when(userService.findByUsername("user1")).thenReturn(user);
+        when(recipeService.findById(1L)).thenReturn(recipe);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/recipes/1/edit").with(user("user1")))
-                .andExpect(status().is3xxRedirection());
+                .andExpect(status().is3xxRedirection())
+                .andExpect(flash().attribute("flash", HasPropertyWithValue.hasProperty("status", Matchers.equalTo(SUCCESS))));
     }
 
     @Test
@@ -246,7 +253,6 @@ public class RecipeControllerTest {
     @Test
     public void unMarkFavoriteTest() throws Exception {
         List<Recipe> recipes = new ArrayList<>();
-        recipes.add(recipe);
         recipes.add(recipe);
         user.addFavorite(recipe);
 
