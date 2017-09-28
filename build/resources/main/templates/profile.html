@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head('' + ${username})"></head>
+
+<body>
+
+<div th:replace="layout :: nav"></div>
+
+  <div class="grid-container">
+
+    <div th:replace="layout :: header"></div>
+    <div th:replace="layout :: flash"></div>
+
+    <div class="grid-100">
+
+      <div class="recipes">
+
+        <div class="grid-100 row controls">
+          <div class="grid-100">
+            <h2 th:text="${username}"> Username </h2>
+          </div>
+        </div> <div class="clear"></div>
+
+        <div style="display: flex; flex-wrap: wrap; width: 100%" th:each="recipe : ${recipes}" class="grid-100 row addHover">
+          <form style="width: 10%" th:action="@{|/recipes/${recipe.id}/favorite|}" method="post">
+            <button style="display: inline; background: transparent; color: #808080; margin-right: 5px" type="submit">
+              <img th:src="${recipe.isFavorited(currentUser)} ? @{/assets/images/favorited.svg} : @{/assets/images/favorite.svg}" height="12px"/>
+            </button>
+          </form>
+          <a style="width: 70%" th:href="@{|/recipes/${recipe.id}/|}">
+            <div class="grid-70">
+              <p style="display: inline; margin-left: 5%" th:text="${recipe.name}">
+                Recipe Name
+              </p>
+            </div>
+          </a>
+          <div style="width: 20%" class="hoverBlock">
+            <!--<div class="grid-30">-->
+              <!--<div class="flush-right">-->
+                <div>
+                  <a th:href="@{|/recipes/${recipe.id}/edit|}"> <img th:src="@{/assets/images/edit.svg}" height="12px"/> Edit </a>
+                <form style="display: inline" th:action="@{|/recipes/${recipe.id}/delete|}" method="post">
+                  <button style="background: transparent; color: #808080; margin-left: 0" type="submit">
+                    <img th:src="@{/assets/images/delete.svg}" height="12px"/> Delete </button>
+                </form>
+                <!--</div>-->
+              <!--</div>-->
+            </div>
+          </div>
+        </div> <div class="clear"></div>
+
+        <div class="row">&nbsp;</div>
+
+      </div> <!-- recipes -->
+    </div> <!-- grid-100 -->
+  </div> <!-- grid-container -->
+</body>
+</html>

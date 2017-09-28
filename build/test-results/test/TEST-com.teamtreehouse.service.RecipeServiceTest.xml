@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.teamtreehouse.service.RecipeServiceTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2017-09-28T01:10:20" hostname="MacBook-Pro.local" time="0.165">
+  <properties/>
+  <testcase name="saveRecipeTest" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.001"/>
+  <testcase name="findByCategoryName_ShouldReturnTwo" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.003"/>
+  <testcase name="deleteRecipeTest" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.006"/>
+  <testcase name="findByUser_ShouldReturnOne" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.116"/>
+  <testcase name="findAll_ShouldReturnTwo" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.001"/>
+  <testcase name="findBySearchTerm_ShouldReturnTwo" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.001"/>
+  <testcase name="searchTermNotFoundExceptionTest" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.001"/>
+  <testcase name="findById_ShouldReturnOne" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.001"/>
+  <testcase name="categoryNotFoundExceptionTest" classname="com.teamtreehouse.service.RecipeServiceTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

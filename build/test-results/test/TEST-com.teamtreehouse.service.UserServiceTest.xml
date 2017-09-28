@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.teamtreehouse.service.UserServiceTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2017-09-28T01:10:21" hostname="MacBook-Pro.local" time="0.028">
+  <properties/>
+  <testcase name="findByUsername_ShouldReturnOne" classname="com.teamtreehouse.service.UserServiceTest" time="0.004"/>
+  <testcase name="usernameNotFoundExceptionTest" classname="com.teamtreehouse.service.UserServiceTest" time="0.003"/>
+  <testcase name="findAll_ShouldReturnTwo" classname="com.teamtreehouse.service.UserServiceTest" time="0.003"/>
+  <testcase name="saveUserTest" classname="com.teamtreehouse.service.UserServiceTest" time="0.001"/>
+  <testcase name="findById_ShouldReturnOne" classname="com.teamtreehouse.service.UserServiceTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

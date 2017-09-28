@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(page_title)">
+    <meta charset="utf-8"/>
+    <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+    <title th:text="${page_title} + ' | My Recipes'">My Recipes</title>
+    <link href='https://fonts.googleapis.com/css?family=Varela+Round' rel='stylesheet' type='text/css'/>
+    <link rel="stylesheet" th:href="@{/assets/css/unsemantic-grid-responsive.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/styles.css}"/>
+</head>
+
+<body>
+
+<div>
+    <nav th:fragment="nav">
+        <button style="background: transparent; color: #808080"><a th:href="@{/profile}" th:text="${username}" style="display: inline">Username</a></button>
+        &bull;
+        <form th:action="@{/logout}" method="post" style="display: inline"><button style="background: transparent; color: #808080">logout</button></form>
+    </nav>
+</div>
+
+<div th:fragment="header" class="grid-100">
+    <a th:href="@{/}">
+        <h1>
+            <img th:src="@{/assets/images/chefbot.svg}" height="60px"/>
+            <br/>
+            My Recipes
+        </h1>
+    </a>
+</div>
+<div th:fragment="flash" th:if="${flash != null}">
+    <div class="message">
+        <div th:classappend="${#strings.toLowerCase(flash.status)}" th:text="${flash.message}" class="flash"></div>
+    </div>
+</div>
+</body>
+</html>

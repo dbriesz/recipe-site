@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head('Login')"></head>
+<body>
+
+<div>
+  <nav>
+    <button style="background: transparent; color: #808080"><a th:href="@{/signup}" style="display: inline">sign-up</a></button>
+    &bull;
+    <form th:action="@{/login}" th:object="${user}" style="display: inline"><button style="background: transparent; color: #808080">login</button></form>
+  </nav>
+</div>
+
+  <div class="grid-container">
+
+    <div class="grid-100">
+      <div th:replace="layout :: header"></div>
+      <div th:replace="layout :: flash"></div>
+    </div>
+
+    <div class="grid-100">
+      <div class="recipes">
+        <form th:action="@{/login}" method="post" class="login">
+        <div class="prefix-20 grid-60 suffix-20">
+          <p>
+            <label> User Name <input type="text" name="username" placeholder="username"/> </label>
+          </p>
+        </div> <div class="clear"></div>
+        <div class="prefix-20 grid-60 suffix-20">
+          <p>
+            <label> Password <input type="password" name="password" placeholder="password"/> </label>
+          </p>
+        </div> <div class="clear"></div>
+        <div class="prefix-20 grid-60 suffix-20">
+          <p>
+            <button type="submit" value="Sign In">Login</button>
+          </p>
+        </div> <div class="clear"></div>
+        </form>
+      </div> <!-- recipes -->
+    </div> <!-- grid-100 -->
+  </div> <!-- grid-container -->
+</body>
+</html>
