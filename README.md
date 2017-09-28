@@ -7,3 +7,11 @@ java -cp h2*jar org.h2.tools.Server
 Once the browser window opens, add the following to the JDBC URL field: jdbc:h2:tcp://localhost/./data/recipe-site
 
 The user name and password fields are blank.
+
+Test user login credentials:
+
+username: user1
+password: password
+
+username: user2
+password: password
